@@ -163,6 +163,7 @@ int MP1Node::finishUpThisNode(){
    /*
     * Your code goes here
     */
+    return 0;
 }
 
 /**
@@ -218,13 +219,16 @@ bool MP1Node::recvCallBack(void *env, char *data, int size ) {
 	/*
 	 * Your code goes here
 	 */
+    if (env->back() == JOINREP) {
+        
+    }
 }
 
 /**
  * FUNCTION NAME: nodeLoopOps
  *
- * DESCRIPTION: Check if any node hasn't responded within a timeout period and then delete
- * 				the nodes
+ * DESCRIPTION: Check if any node hasn't responded within a timeout period 
+ * 				and then delete the nodes
  * 				Propagate your membership list
  */
 void MP1Node::nodeLoopOps() {

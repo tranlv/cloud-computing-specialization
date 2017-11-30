@@ -57,6 +57,14 @@ private:
 	Member *memberNode;
 	char NULLADDR[6];
 
+
+	// msg handler functions
+	bool handleJoinRequest(char *data, int size);
+	bool handleJoinReply(char *data, int size);
+
+	bool updateMembershipList(MemberListEntry memberListEntry);
+
+
 public:
 	MP1Node(Member *, Params *, EmulNet *, Log *, Address *);
 	Member * getMemberNode() {
@@ -77,6 +85,7 @@ public:
 	void initMemberListTable(Member *memberNode);
 	void printAddress(Address *addr);
 	virtual ~MP1Node();
+
 };
 
 #endif /* _MP1NODE_H_ */

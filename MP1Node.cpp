@@ -221,19 +221,81 @@ bool MP1Node::recvCallBack(void *env, char *data, int size )
 	/*
 	 * Your code goes here
 	 */
+    boolean requestValue;
     MessageHdr *msg = (MessageHdr *) data;
+    MsgTypes msgType = msg->msgType;
 
-    if (msg->data == JOINREQ) {
-        Address *joiningAddr = (Address *) malloc(sizeof(Address));
-        memcpy(&joiningAddr->addr, ((char *)msg) + sizeof(MessageHdr), sizeof(joiningAddr->addr));
+    char* messageContent = data + sizeof(MessageHdr);
+    size_t messageContentsize = size - sizeof(MessageHdr);
 
-        cout<<"received JOINREQ from: " << joiningAddr;
-    
-    } else if (msg->data == JOINREP) {
-        // Mark node as added to the group
-        memberNode->inGroup = true;
-    }
+    if (msgType == JOINREQ) {
+        requestValue = handleJoinRequest(message_content, (int) message_content_size)
+    } 
+
+    return requestValue;
 }
+
+MP1Node::handleJoinRequest(char* data, int size) {
+    Address * requester = (Address*) data;
+    updateMembershipList(MemberListEntry(*((int*)requester->addr), 
+                                        *((short*)(requester->addr+4)),
+                                         *((long*)(data + sizeof(Address)))))
+    // sned row to the requester
+    size_t replaySize = sizeof(MessageHdr) + sizeof(Address) + sizeof(long) + 1;
+    MessageHrd* replyData = (MessageHdr*) malloc(replaySize);
+    replyData->msgType = JOINREP;
+    memcpy((char*)(replyData+1), &(memberNode->addr), sizeof(Address));
+    memcpy((char*)(replyData+1) + sizeof(Address) + 1, &(memberNode->heartbeat), sizeof(long));
+    emulNet->ENsend(&memberNode->addr, requester, (char*)replyData, replaySize);
+
+    free(replyData);
+    return true;
+}
+
+
+bool MP1Node::updateMembershipList(MemberListEntry memberListEntry) {
+    Address entryAddress = getArress(memberListEntry);
+    long heartbeat = entry.getheartbeat();
+
+    for (vector<MemberListEntry>::iterator iter = memberNode->memberList.begin(); iter != memberNode->memberList.end(); iter++) {
+        if (getArress(*iter) == entryAddress) { //already exist and marked as failed
+            if(heartbeat == -1) {
+                iter->setheartbeat(-1);
+                return true;
+            }
+            if (iter->getheartbeat() == -1) {
+                return false;
+            }
+            if (iter->getheartbeat() < heartbeat) { //actual update
+                iter->settimestamp(par->getcurrtime())
+                iter->setheartbeat(hearbeat);
+                return true;
+            }
+            //no change
+            return false;
+        }
+    }
+
+    if (heartbeat == -1) {
+        return false;
+    }
+
+    memberNode -> memberList.push_back(MemberListEntry(memberListEntry));
+    #ifdef DEBUGLOG
+        log->logNodeADD(&(memberNode->addr), &entry_addr);
+    #endif
+
+    return true;
+}
+
+
+static Address getAddess(MemberListEntry memberListEntry) {
+    Address address;
+    memcpy(address.addr, &memberListEntry.id, sizeof(int));
+    memcpy(&address.addr[4], emberListEntry.port, sizeof(short));
+    return address;
+}
+
 
 /**
  * FUNCTION NAME: nodeLoopOps

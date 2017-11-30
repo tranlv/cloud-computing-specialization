@@ -247,7 +247,7 @@ void MP1Node::nodeLoopOps() {
 	/*
 	 * Your code goes here
 	 */
-    if (memberNode->pingcounter == 0) {
+    if (memberNode->pingCounter == 0) {
         membership.heartbeat++;
     }
 

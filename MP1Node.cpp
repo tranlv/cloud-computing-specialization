@@ -216,36 +216,43 @@ void MP1Node::checkMessages() {
  * DESCRIPTION: Message handler for different message types
  *              where the nodes receive messages           
  */
-bool MP1Node::recvCallBack(void *env, char *data, int size ) 
-{
+bool MP1Node::recvCallBack(void *env, char *data, int size) {
 	/*
 	 * Your code goes here
 	 */
     boolean requestValue;
-    MessageHdr *msg = (MessageHdr *) data;
+    MessageHdr *msg = (MessageHdr*) data;
     MsgTypes msgType = msg->msgType;
 
     char* messageContent = data + sizeof(MessageHdr);
-    size_t messageContentsize = size - sizeof(MessageHdr);
+    size_t messageContentSize = size - sizeof(MessageHdr);
 
     if (msgType == JOINREQ) {
-        requestValue = handleJoinRequest(message_content, (int) message_content_size)
+        requestValue = handleJoinRequest(messageContent, (int) messageContentSize)
     } 
 
     return requestValue;
 }
 
-MP1Node::handleJoinRequest(char* data, int size) {
-    Address * requester = (Address*) data;
-    updateMembershipList(MemberListEntry(*((int*)requester->addr), 
-                                        *((short*)(requester->addr+4)),
-                                         *((long*)(data + sizeof(Address)))))
+
+MP1Node::handleJoinRequest(char* messageContent, int messageContentSize) {
+
+    Address * requester = (Address*) messageContent;
+    //MemberListEntry(int id, short port, long heartbeat, long timestamp)
+    MemberListEntry list = MemberListEntry(*((int *)requester->addr), 
+                                    *((short *)(requester->addr + 4)), 
+                                    *((long *)(data + sizeof(Address)+1)), 
+                                    par->getcurrtime())
+    updateMembershipList(list);
+
     // sned row to the requester
     size_t replaySize = sizeof(MessageHdr) + sizeof(Address) + sizeof(long) + 1;
     MessageHrd* replyData = (MessageHdr*) malloc(replaySize);
     replyData->msgType = JOINREP;
-    memcpy((char*)(replyData+1), &(memberNode->addr), sizeof(Address));
-    memcpy((char*)(replyData+1) + sizeof(Address) + 1, &(memberNode->heartbeat), sizeof(long));
+    memcpy((char*)(replyData + 1), &(memberNode->addr), sizeof(Address));
+    memcpy((char*)(replyData + 1) + sizeof(Address) + 1, &(memberNode->heartbeat), sizeof(long));
+
+    // send JOINREQ message to introducer member
     emulNet->ENsend(&memberNode->addr, requester, (char*)replyData, replaySize);
 
     free(replyData);
@@ -254,12 +261,16 @@ MP1Node::handleJoinRequest(char* data, int size) {
 
 
 bool MP1Node::updateMembershipList(MemberListEntry memberListEntry) {
-    Address entryAddress = getArress(memberListEntry);
+
+    Address entryAddress = getAddress(memberListEntry);
     long heartbeat = entry.getheartbeat();
 
-    for (vector<MemberListEntry>::iterator iter = memberNode->memberList.begin(); iter != memberNode->memberList.end(); iter++) {
-        if (getArress(*iter) == entryAddress) { //already exist and marked as failed
-            if(heartbeat == -1) {
+    for (vector<MemberListEntry>::iterator iter = memberNode->memberList.begin(); 
+            iter != memberNode->memberList.end(); iter++) {
+
+        //if new entry is already exist in 
+        if (getAddress(*iter) == entryAddress) { 
+            if(heartbeat == -1) { // marked as failed
                 iter->setheartbeat(-1);
                 return true;
             }
@@ -289,7 +300,7 @@ bool MP1Node::updateMembershipList(MemberListEntry memberListEntry) {
 }
 
 
-static Address getAddess(MemberListEntry memberListEntry) {
+static Address getAddress(MemberListEntry memberListEntry) {
     Address address;
     memcpy(address.addr, &memberListEntry.id, sizeof(int));
     memcpy(&address.addr[4], emberListEntry.port, sizeof(short));

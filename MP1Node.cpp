@@ -239,10 +239,10 @@ MP1Node::handleJoinRequest(char* messageContent, int messageContentSize) {
 
     Address * requester = (Address*) messageContent;
     //MemberListEntry(int id, short port, long heartbeat, long timestamp)
-    MemberListEntry list = MemberListEntry(*((int *)requester->addr), 
-                                    *((short *)(requester->addr + 4)), 
-                                    *((long *)(data + sizeof(Address)+1)), 
-                                    par->getcurrtime())
+    MemberListEntry list = new MemberListEntry(*((int *)requester->addr), 
+                                                *((short *)(requester->addr + 4)), 
+                                                *((long *)(data + sizeof(Address)+1)), 
+                                                par->getcurrtime())
     updateMembershipList(list);
 
     // sned row to the requester

@@ -214,13 +214,24 @@ void MP1Node::checkMessages() {
  * FUNCTION NAME: recvCallBack
  *
  * DESCRIPTION: Message handler for different message types
+ *              where the nodes receive messages           
  */
-bool MP1Node::recvCallBack(void *env, char *data, int size ) {
+bool MP1Node::recvCallBack(void *env, char *data, int size ) 
+{
 	/*
 	 * Your code goes here
 	 */
-    if (env->back() == JOINREP) {
-        
+    MessageHdr *msg = (MessageHdr *) data;
+
+    if (msg->data == JOINREQ) {
+        Address *joiningAddr = (Address *) malloc(sizeof(Address));
+        memcpy(&joiningAddr->addr, ((char *)msg) + sizeof(MessageHdr), sizeof(joiningAddr->addr));
+
+        cout<<"received JOINREQ from: " << joiningAddr;
+    
+    } else if (msg->data == JOINREP) {
+        // Mark node as added to the group
+        memberNode->inGroup = true;
     }
 }
 
@@ -236,6 +247,9 @@ void MP1Node::nodeLoopOps() {
 	/*
 	 * Your code goes here
 	 */
+    if (memberNode->pingcounter == 0) {
+        membership.heartbeat++;
+    }
 
     return;
 }
@@ -267,7 +281,7 @@ Address MP1Node::getJoinAddress() {
 /**
  * FUNCTION NAME: initMemberListTable
  *
- * DESCRIPTION: Initialize the membership list
+ * DESCRIPTION: Initialize the membership add
  */
 void MP1Node::initMemberListTable(Member *memberNode) {
 	memberNode->memberList.clear();

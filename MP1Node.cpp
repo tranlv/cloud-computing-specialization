@@ -237,8 +237,9 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
         memcpy(&port, data + sizeof(MessageHdr) + sizeof(int), sizeof(short));
         memcpy(&heartbeat, data + sizeof(MessageHdr) + sizeof(int) + sizeof(short), sizeof(long));
 
+        if (this->)
         // create new membership entry and add to the membership list of the node
-        updateMembershipList(id, port, hearbeat, memberNode->timeOutCounter) {
+        updateMembershipList(id, port, hearbeat, memberNode->timeOutCounter) 
 
     } else if (msgType == JOINREP) {
         requestValue = handleJoinReplay(messageContent, (int) messageContentSize)
@@ -252,8 +253,12 @@ bool MP1Node::updateMembershipList(int id, short port, long heartbeat, long time
 
     Address entryAddress = getNodeAddress(id, port);
 
-    //if new node is not in the membership list then create and aa a new member list entry
-    if ()
+    //if new node is not in the membership list then create and add a new member list entry
+    if (this->getNodeInMembershipList(id) == NULL) {
+        MemberListEntry * newEntry = new MemberListEntry(id, port, heartbeat, timeStamp);
+        memberNode->memberList.insert(memberNode->memberList.end(), *newEntry);
+        #ifdef DEBUGLOG
+    }
 }
 
 
@@ -265,6 +270,10 @@ Address MP1Node::getnodeAddress(int id, short port) {
     *(short*)(nodeAddress->addr[4]) = port;
 
     return nodeAddress;
+}
+
+bool MP1Node::existsNodeInMemberListTable(int id) {
+    return (this->getNodeInMemberListTable(id) != NULL);
 }
 
 MemberListEntry* MP1Npde::getNodeInMembershipList(int id) {

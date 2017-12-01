@@ -221,90 +221,64 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
 	 * Your code goes here
 	 */
     boolean requestValue;
-    MessageHdr *msg = (MessageHdr*) data;
-    MsgTypes msgType = msg->msgType;
 
-    char* messageContent = data + sizeof(MessageHdr);
-    size_t messageContentSize = size - sizeof(MessageHdr);
+    MessageHdr *msg = (MessageHdr*) malloc(size * sizeof(char));
+    memcpy(msg, data, sizeof(MessageHdr));
+
+    MsgTypes msgType = msg->msgType;
 
     if (msgType == JOINREQ) {
         requestValue = handleJoinRequest(messageContent, (int) messageContentSize)
-    } 
+        // read message data
+        int id;
+        short port;
+        long hearbeat;
+        memcpy(&id, data + sizeof(MessageHdr), sizeof(int));
+        memcpy(&port, data + sizeof(MessageHdr) + sizeof(int), sizeof(short));
+        memcpy(&heartbeat, data + sizeof(MessageHdr) + sizeof(int) + sizeof(short), sizeof(long));
+
+        // create new membership entry and add to the membership list of the node
+        updateMembershipList(id, port, hearbeat, memberNode->timeOutCounter) {
+
+    } else if (msgType == JOINREP) {
+        requestValue = handleJoinReplay(messageContent, (int) messageContentSize)
+    }
 
     return requestValue;
 }
 
 
-MP1Node::handleJoinRequest(char* messageContent, int messageContentSize) {
+bool MP1Node::updateMembershipList(int id, short port, long heartbeat, long timeStamp) {
 
-    Address * requester = (Address*) messageContent;
-    //MemberListEntry(int id, short port, long heartbeat, long timestamp)
-    MemberListEntry list = new MemberListEntry(*((int *)requester->addr), 
-                                                *((short *)(requester->addr + 4)), 
-                                                *((long *)(data + sizeof(Address)+1)), 
-                                                par->getcurrtime())
-    updateMembershipList(list);
+    Address entryAddress = getNodeAddress(id, port);
 
-    // sned row to the requester
-    size_t replaySize = sizeof(MessageHdr) + sizeof(Address) + sizeof(long) + 1;
-    MessageHrd* replyData = (MessageHdr*) malloc(replaySize);
-    replyData->msgType = JOINREP;
-    memcpy((char*)(replyData + 1), &(memberNode->addr), sizeof(Address));
-    memcpy((char*)(replyData + 1) + sizeof(Address) + 1, &(memberNode->heartbeat), sizeof(long));
-
-    // send JOINREQ message to introducer member
-    emulNet->ENsend(&memberNode->addr, requester, (char*)replyData, replaySize);
-
-    free(replyData);
-    return true;
+    //if new node is not in the membership list then create and aa a new member list entry
+    if ()
 }
 
 
-bool MP1Node::updateMembershipList(MemberListEntry memberListEntry) {
+Address MP1Node::getnodeAddress(int id, short port) {
+    Address nodeAddress;
 
-    Address entryAddress = getAddress(memberListEntry);
-    long heartbeat = entry.getheartbeat();
+    memset(&nodeAddress, 0, sizeof(Address));
+    *(int*)(nodeAdress->addr) = id;
+    *(short*)(nodeAddress->addr[4]) = port;
 
-    for (vector<MemberListEntry>::iterator iter = memberNode->memberList.begin(); 
-            iter != memberNode->memberList.end(); iter++) {
+    return nodeAddress;
+}
 
-        //if new entry is already exist in 
-        if (getAddress(*iter) == entryAddress) { 
-            if(heartbeat == -1) { // marked as failed
-                iter->setheartbeat(-1);
-                return true;
-            }
-            if (iter->getheartbeat() == -1) {
-                return false;
-            }
-            if (iter->getheartbeat() < heartbeat) { //actual update
-                iter->settimestamp(par->getcurrtime())
-                iter->setheartbeat(hearbeat);
-                return true;
-            }
-            //no change
-            return false;
+MemberListEntry* MP1Npde::getNodeInMembershipList(int id) {
+    MemberListEntry* entry = Null;
+
+    for (std::vector<MemberListEntry>::iterator it = memberNode->memberList.begin(); 
+        it != memberNode-> memberList.end(); ++it) {
+        if(it->id == id) {
+            entry = it.base();
+            break;
         }
     }
 
-    if (heartbeat == -1) {
-        return false;
-    }
-
-    memberNode -> memberList.push_back(MemberListEntry(memberListEntry));
-    #ifdef DEBUGLOG
-        log->logNodeADD(&(memberNode->addr), &entry_addr);
-    #endif
-
-    return true;
-}
-
-
-static Address getAddress(MemberListEntry memberListEntry) {
-    Address address;
-    memcpy(address.addr, &memberListEntry.id, sizeof(int));
-    memcpy(&address.addr[4], emberListEntry.port, sizeof(short));
-    return address;
+    return entry;
 }
 
 

@@ -297,7 +297,7 @@ void MP1Node::nodeLoopOps() {
 
     //check if node should send a new heartbeat
     if (memberNode->heartbeat == 0) {
-        //increment no of hearbeat
+        //increment no of heartbeat
         memberNode->heartbeat++;
 
         // send heatbeat msg to all nodes

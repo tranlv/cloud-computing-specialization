@@ -252,9 +252,9 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
         UpdateMembershipList(id, port, heartbeat, memberNode->timeOutCounter);
 
         //send JOINREP msg
-        Address newNodeAddress = GetNodeAddress(id, port);
+        Address new_node_address = GetNodeAddress(id, port);
 
-        SendJOINREPLYMessage(&newNodeAddress);
+        SendJOINREPLYMessage(&new_node_address);
 
     } else if (msg_type == JOINREP) {
         memberNode->inGroup = true;
@@ -304,7 +304,9 @@ void MP1Node::nodeLoopOps() {
         for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
              it != memberNode->memberList.end(); it++) {
             Address nodeAddress = GetNodeAddress(it->id, it->getport());
-            if (!IsAddressEqualToNodeAddress(&nodeAddress)) {}
+            if (!IsAddressEqualToNodeAddress(&nodeAddress)) {
+               SendHEARTBEATMessage(&nodeAddress);
+            }
         }
         //reset ping counter
         memberNode->pingCounter = TFAIL;
@@ -432,24 +434,55 @@ MemberListEntry* MP1Node::GetNodeInMembershipList(int id) {
 }
 
 
-void MP1Node::SendJOINREPLYMessage(Address * joinAddr) {
+void MP1Node::SendJOINREQUESTMessage(Address* join_address) {
+    size_t msg_size = sizeof(MessageHdr) + sizeof(join_address->addr) + sizeof(long) +1 ;
+    MessageHdr * msg = (MessageHdr*) malloc(msg_size * sizeof(char));
+
+    // Create JOINREQ message: format of data is {struct Address myaddr}
+    msg->msgType = JOINREQ;
+    memcpy((char*)(msg + 1), &memberNode->addr.addr, sizeof(memberNode->addr.addr));
+    memcpy((char*)(msg + 1) + sizeof(memberNode->addr.addr), &memberNode->heartbeat, sizeof(long));
+
+#ifdef DEBUGLOG
+    log->LOG(&memberNode->addr, "Trying to join...");
+#endif
+
+    // send JOINREQ mesg to introducer member
+    emulNet->ENsend(&memberNode->addr, join_address, (char*)msg, msg_size);
+
+    free(msg);
+}
+
+
+void MP1Node::SendJOINREPLYMessage(Address* destination_address) {
     size_t membership_list_size = sizeof(int) + sizeof(short) + sizeof(long) + sizeof(long);
 
     size_t msg_size = sizeof(MessageHdr) + sizeof(int) + (memberNode->memberList.size() * membership_list_size);
     MessageHdr * msg = (MessageHdr*) malloc(msg_size * sizeof(char));
     msg->msgType = JOINREP;
-    memcpy((char*)(msg + 1), &memberNode->addr.addr, sizeof(memberNode->addr.addr));
-    memcpy((char*)(msg + 1) + sizeof(memberNode->addr.addr), (&memberNode->heartbeat), sizeof(long));
 
-#ifdef DEBUGLOG
-    log->LOG(&memberNode->addr, "trying to join...");
-#endif
+    //serialize member list
+    SerializeMembershipListForJOINREPMessageSending(msg);
 
-    // send JOINREQ mesg to introducer member
-    emulNet->ENsend(&memberNode->addr, joinAddr, (char*)msg, msg_size);
+    // send joinreply message to the new node
+    emulNet->ENsend(&memberNode->addr, destination_address, (char*)msg, msg_size);
 
     free(msg);
+}
 
+void MP1Node::SendHEARTBEATMessage(Address* destination_address) {
+    size_t msg_size = sizeof(MessageHdr) + sizeof(destination_address->addr) + sizeof(long) + 1;
+    MessageHdr *msg = (MessageHdr *) malloc(msg_size * sizeof(char));
+
+    // Create HEARTBEAT message
+    msg->msgType = HEARTBEAT;
+    memcpy((char*)(msg + 1), &memberNode->addr.addr, sizeof(memberNode->addr.addr));
+    memcpy((char*)(msg + 1) + sizeof(memberNode->addr.addr), &memberNode->heartbeat, sizeof(long));
+
+    // Send HEARTBEAT message to destination node
+    emulNet->ENsend(&memberNode->addr, destination_address, (char *)msg, msg_size);
+
+    free(msg);
 }
 
 void MP1Node::SerializeMembershipListForJOINREPMessageSending(MessageHdr* msg) {

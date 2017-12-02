@@ -79,10 +79,12 @@ public:
 	virtual ~MP1Node();
 
 
-	Address getnodeAddress(int id, short port);
-	void updateMembershipList(int id, short port, long heartbeat, long timeStamp);
-	MemberListEntry* getNodeInMembershipList(int id);
-
+	Address GetNodeAddress(int id, short port);
+	void UpdateMembershipList(int id, short port, long heartbeat, long timeStamp);
+	MemberListEntry* GetNodeInMembershipList(int id);
+	void SendJOINREPLYMessage(Address *destinationAddr);
+	void SerializeMembershipListForJOINREPMessageSending(MessageHdr *msg);
+	void DeserializeMembershipListForJOINREPMessageReceiving(char *data);
 };
 
 #endif /* _MP1NODE_H_ */

@@ -1,0 +1,3 @@
+C:/Users/workshop/Desktop/project/membership_protocol/cmake-build-debug/CMakeFiles/membership_protocol.dir
+C:/Users/workshop/Desktop/project/membership_protocol/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/workshop/Desktop/project/membership_protocol/cmake-build-debug/CMakeFiles/rebuild_cache.dir

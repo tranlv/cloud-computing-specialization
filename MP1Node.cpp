@@ -93,11 +93,8 @@ void MP1Node::nodeStart(char *servaddrstr, short servport) {
  * DESCRIPTION: Find out who I am and start up
  */
 int MP1Node::initThisNode(Address *joinaddr) {
-	/*
-	 * This function is partially implemented and may require changes
-	 */
-	int id = *(int*)(&memberNode->addr.addr);
-	int port = *(short*)(&memberNode->addr.addr[4]);
+	//int id = *(int*)(&memberNode->addr.addr);
+	//int port = *(short*)(&memberNode->addr.addr[4]);
 
 	memberNode->bFailed = false;
 	memberNode->inited = true;
@@ -117,6 +114,7 @@ int MP1Node::initThisNode(Address *joinaddr) {
  *
  * DESCRIPTION: Join the distributed system
  */
+
 int MP1Node::introduceSelfToGroup(Address *joinaddr) {
 	MessageHdr *msg;
 #ifdef DEBUGLOG
@@ -235,9 +233,6 @@ void MP1Node::checkMessages() {
  *              where the nodes receive messages           
  */
 bool MP1Node::recvCallBack(void *env, char *data, int size) {
-	/*
-	 * Your code goes here
-	 */
 
     MessageHdr *msg = (MessageHdr*) malloc(size * sizeof(char));
     memcpy(msg, data, sizeof(MessageHdr));
@@ -266,6 +261,25 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
         //Deserialize member list and items to the membership list of the node
         DeserializeMembershipListForJOINREPMessageReceiving(data);
+    } else if (msg_type == HEARTBEAT) {
+
+        // read message data
+        int id;
+        short port;
+        long heartbeat;
+        memcpy(&id, data + sizeof(MessageHdr), sizeof(int));
+        memcpy(&port, data + sizeof(MessageHdr) + sizeof(int), sizeof(short));
+        memcpy(&heartbeat, data + sizeof(MessageHdr) + sizeof(int) + sizeof(short), sizeof(long));
+
+        // create new membership entry and add to the membership list of the node
+        if (this->GetNodeInMembershipList(id) != NULL) {
+            UpdateMembershipList(id, port, heartbeat, memberNode->timeOutCounter);
+        } else {
+            // update the membership entry
+            MemberListEntry * node = GetNodeInMembershipList(id);
+            node->setheartbeat(heartbeat);
+            node->settimestamp(memberNode->timeOutCounter);
+        }
     }
 
     return true;

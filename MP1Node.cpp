@@ -385,9 +385,51 @@ void MP1Node::DeserializeMembershipListForJOINREPMessageReceiving(char *data) {
  */
 void MP1Node::nodeLoopOps() {
 
-	/*
-	 * Your code goes here
-	 */
+    //check if node should send a new heartbeat
+    if (memberNode->heartbeat == 0) {
+        //increment no of hearbeat
+        memberNode->heartbeat++;
+
+        // send heatbeat msg to all nodes
+        for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
+             it != memberNode->memberList.end(); it++) {
+            Address nodeAddress = GetNodeAddress(it->id, it->getport());
+            if (!IsAddressEqualToNodeAddress(&nodeAddress)) {}
+        }
+        //reset ping counter
+        memberNode->pingCounter = TFAIL;
+    } else {
+        // decrement ping counter
+        memberNode->pingCounter--;
+    }
+
+    //check if any node has failed
+    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin(); it != memberNode->memberList.end(); ++it) {
+        Address nodeAddress = GetNodeAddress(it->id, it->getport());
+        if (!IsAddressEqualToNodeAddress(&nodeAddress)) {
+            // after T(cleanup) seconds, it will delete the member from the list.
+            if(memberNode->timeOutCounter - it->timestamp > TREMOVE) {
+                //remove node
+                memberNode->memberList.erase(it);
+
+                #ifdef DEBUGLOG
+                log->logNodeRemove(&memberNode->addr, &nodeAddress);
+                #endif
+
+                break;
+            }
+        }
+    }
+
+    //increment over counter
+    memberNode->timeOutCounter++;
+
+    return;
+}
+
+bool MP1Node::IsAddressEqualToNodeAddress (Address * address) {
+    return memcmp((char*)&memberNode->addr.addr, (char*)&(address->addr), sizeof(memberNode->addr.addr));
+
 }
 
 /**

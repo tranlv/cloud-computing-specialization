@@ -85,6 +85,7 @@ public:
 	void SendJOINREPLYMessage(Address *destinationAddr);
 	void SerializeMembershipListForJOINREPMessageSending(MessageHdr *msg);
 	void DeserializeMembershipListForJOINREPMessageReceiving(char *data);
+    bool IsAddressEqualToNodeAddress(Address *address);
 };
 
 #endif /* _MP1NODE_H_ */

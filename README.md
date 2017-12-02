@@ -2,7 +2,9 @@
 
 Overview
 ---
-The repo contains implementation of Distributed sytem's gossip-style membership protocol as part of programming project from University of Illinois at Urbana-Champaign' [cloud computing specialization](https://www.coursera.org/specializations/cloud-computing)
+The repo contains implementation of Distributed sytem's gossip-style membership protocol.
+
+The project is the first project from University of Illinois at Urbana-Champaign' [cloud computing specialization](https://www.coursera.org/specializations/cloud-computing)
 
 Since it is infeasible to run a thousand cluster nodes (peers) over a real network, there is an implementation of an emulated network layer (EmulNet). The membership protocol implementation will sit above EmulNet in a peer- to-peer (P2P) layer, but below an App layer. Think of this like a three-layer protocol stack with Application, P2P, and EmulNet as the three layers (from top to bottom). 
 

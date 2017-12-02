@@ -318,6 +318,7 @@ void MP1Node::nodeLoopOps() {
     //check if any node has failed
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin(); it != memberNode->memberList.end(); ++it) {
         Address nodeAddress = GetNodeAddress(it->id, it->getport());
+
         if (!IsAddressEqualToNodeAddress(&nodeAddress)) {
             // after T(cleanup) seconds, it will delete the member from the list.
             if(memberNode->timeOutCounter - it->timestamp > TREMOVE) {
@@ -389,27 +390,45 @@ void MP1Node::printAddress(Address *addr)
 }
 
 
-void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long timeStamp) {
+void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long timestamp) {
 
     //if new node is not in the membership list then create and add a new member list entry
-    if (this->GetNodeInMembershipList(id) == NULL) {
-        MemberListEntry * newEntry = new MemberListEntry(id, port, heartbeat, timeStamp);
-        memberNode->memberList.insert(memberNode->memberList.end(), * newEntry);
+   // if (this->GetNodeInMembershipList(id) == NULL) {
+   //     MemberListEntry *newEntry = new MemberListEntry(id, port, heartbeat, timeStamp);
+    //    memberNode->memberList.insert(memberNode->memberList.end(), *newEntry);
+    //}
+    bool already_in_list = false;
 
-        Address newEntryAddress = GetNodeAddress(id, port);
+    Address entry_address = GetNodeAddress(id, port);
+    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
+            it != memberNode->memberList.end(); it++) {
+        if(GetNodeAddress(it->id, it->port) == entry_address ) { //already exists
+            already_in_list = true;
+            if (heartbeat == -1) {
+                it->setheartbeat(-1);
+            }
+            if (it->getheartbeat() < heartbeat) { //update
+                it->settimestamp(par->getcurrtime());
+                it->setheartbeat(heartbeat);
+            }
+        }
+    }
+
+    if (!already_in_list) {
+        MemberListEntry* new_entry = new MemberListEntry(id, port, heartbeat, timestamp);
+        memberNode->memberList.insert(memberNode->memberList.end(), new_entry);
+    }
+
 #ifdef DEBUGLOG
         //void logNodeAdd(Address *, Address *);
-        log->logNodeAdd(& memberNode->addr, &newEntryAddress);
+        log->logNodeAdd(& memberNode->addr, & entry_address);
 #endif
 
-        delete newEntry;
-    }
 }
 
 
 Address MP1Node::GetNodeAddress(int id, short port) {
     Address nodeAddress;
-
     memset(&nodeAddress, 0, sizeof(Address));
     *(int*)(&nodeAddress.addr) = id;
     *(short*)(&nodeAddress.addr[4]) = port;

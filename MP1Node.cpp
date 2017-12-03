@@ -216,17 +216,19 @@ void MP1Node::checkMessages() {
  *
  * PARAMS:
  *        char *data : new entry
+ *        int size : size of entire data ; include header and data
  *
  */
 bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
-    MessageHdr *msg = (MessageHdr*) data;
+    MessageHdr* msg = (MessageHdr*) data;
     MsgTypes msg_type = msg->msgType;
 
-    char * msg_content = data + sizeof(MessageHdr);
+    char* msg_content = data + sizeof(MessageHdr);
 
+    Address* source = (Address*) msg_content;
     if (msg_type == JOINREP) {
-        Address* source = (Address*) msg_content;
+
 
         // source ->addr point den char[0]
         // (int*) source ->addr convert to int memory
@@ -238,11 +240,9 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
                              par->getcurrtime());
 
     } else if (msg_type == JOINREQ) {
-        Address* requester = (Address*) msg_content;
         memberNode->inGroup = true;
-
-        UpdateMembershipList(*(int*)(requester ->addr),
-                             *(short*)(requester -> addr + 4),
+        UpdateMembershipList(*(int*)(source  ->addr),
+                             *(short*)(source  -> addr + 4),
                              *(long*)(msg_content + sizeof(Address) + 1),
                              par->getcurrtime());
 
@@ -256,7 +256,7 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
         memcpy((char*)(reply_data) + 1 + sizeof(Address) + 1, &(memberNode->heartbeat), sizeof(long));
 
         //send reply to entry node
-        emulNet->ENsend(&memberNode->addr, requester, (char*) reply_data, reply_size);
+        emulNet->ENsend(&memberNode->addr, source, (char*) reply_data, reply_size);
         free(reply_data);
 
     } else if (msg_type == PING) {
@@ -283,6 +283,11 @@ void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long time
 
         if(GetNodeAddressFromIdAndPort(it->id, it->port) == entry_address ) { //already exists
             already_in_list = true;
+
+            if (heartbeat == FAIL) {
+                it->setheartbeat(FAIL);
+            }
+            
             if (it->getheartbeat() < heartbeat) { //update
                 it->settimestamp(par->getcurrtime());
                 it->setheartbeat(heartbeat);
@@ -331,7 +336,7 @@ vector<MemberListEntry> MP1Node::DeserializeData(char* table, int rows) {
         temp_entry.settimestamp(par->getcurrtime());
 
         MemberListEntry entry = MemberListEntry(temp_entry);
-        member_list.push_back(MemberListEntry(temp_entry));
+        member_list.push_back(entry);
     }
 
     return member_list;

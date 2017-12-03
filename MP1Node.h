@@ -74,7 +74,7 @@ public:
 	void nodeLoopOps();
 	int isNullAddress(Address *addr);
 	Address getJoinAddress();
-	void initMemberListTable(Member *memberNode, int id, int port);
+	void initMemberListTable(Member *memberNode, int id, short port);
 	void printAddress(Address *addr);
 	virtual ~MP1Node();
 

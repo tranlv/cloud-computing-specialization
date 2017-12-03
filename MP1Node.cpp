@@ -479,7 +479,7 @@ Address MP1Node::getJoinAddress() {
  *
  * DESCRIPTION: Initialize the membership add
  */
-void MP1Node::initMemberListTable(Member *memberNode, int id, int port) {
+void MP1Node::initMemberListTable(Member *memberNode, int id, short port) {
 	memberNode->memberList.clear();
     MemberListEntry me = MemberListEntry(id, port, memberNode->heartbeat, par->getcurrtime());
     memberNode->memberList.push_back(me);

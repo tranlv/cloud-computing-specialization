@@ -103,7 +103,7 @@ int MP1Node::initThisNode(Address *joinaddr) {
     // node is up!
 	memberNode->nnb = 0;
 	memberNode->heartbeat = 0;
-	memberNode->pingCounter = 2;
+	memberNode->pingCounter = 4;
 	memberNode->timeOutCounter = -1;
     initMemberListTable(memberNode, id, (short)port);
 
@@ -438,8 +438,8 @@ void MP1Node::nodeLoopOps() {
         memberNode->memberList[0].heartbeat++;
         PingOthers();
 
-        //reser ping coutter to 5
-        memberNode->pingCounter = 2;
+        //reset ping 
+        memberNode->pingCounter = 4;
     } else {
         memberNode->pingCounter--;
     }

@@ -4,7 +4,7 @@ Overview
 ---
 The repo contains implementation of Distributed sytem's gossip-style membership protocol.
 
-The project is the first project of University of Illinois at Urbana-Champaign' [cloud computing specialization](https://www.coursera.org/specializations/cloud-computing)
+The project is the first project of University of Illinois at Urbana-Champaign' [cloud computing specialization](https://www.coursera.org/specializations/cloud-computing).
 
 Project Specification
 ---
@@ -68,7 +68,8 @@ To execute the program, from the program directory run: ./Application testcases/
 
 ```
 MAX_NNB: val
-SINGLE_FAILURE: val DROP MSG: val
+SINGLE_FAILURE: val
+DROP MSG: val
 MSG_DROP_PROB: val
 ```
 

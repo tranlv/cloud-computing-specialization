@@ -81,7 +81,13 @@ There is a grader script Grader.sh. It tests the implementation of membership pr
 2. Multiple node failure
 3. Single node failure under a lossy network.
 
-The grader tests the following things: i) whether all nodes joined the peer group correctly, ii) whether all nodes detected the failed node (completeness) and iii) whether the correct failed node was detected (accuracy). Each of these is represented as configuration files inside the testcases folder.
+The grader tests the following things:
+```
+i) whether all nodes joined the peer group correctly,
+ii) whether all nodes detected the failed node (completeness) and
+iii) whether the correct failed node was detected (accuracy).
+```
+Each of these is represented as configuration files inside the testcases folder.
 
 
 Contribution

@@ -240,68 +240,66 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
     MessageHdr *msg = (MessageHdr*) malloc(size * sizeof(char));
     memcpy(msg, data, sizeof(MessageHdr));
-
     MsgTypes msg_type = msg->msgType;
 
+    char * msg_content = data + sizeof(MessageHdr);
+    int msg_content_size = (int)(size - sizeof(MessageHdr));
+
     if (msg_type == JOINREQ) {
-        // read message data
-        int id;
-        short port;
-        long heartbeat;
-        memcpy(&id, data + sizeof(MessageHdr), sizeof(int));
-        memcpy(&port, data + sizeof(MessageHdr) + sizeof(int), sizeof(short));
-        memcpy(&heartbeat, data + sizeof(MessageHdr) + sizeof(int) + sizeof(short), sizeof(long));
+        Address* requester = (Address*) msg_content;
 
-        // create new membership entry and add to the membership list of the node
-        UpdateMembershipList(id, port, heartbeat, memberNode->timeOutCounter);
+        // requester->addr point den char[0]
+        // (int*) requester->addr convert to int memory
+        // *(int*)(requester->addr) convert to 32-bits int value
 
-        //send JOINREP msg
-        Address new_node_address = GetNodeAddress(id, port);
+        UpdateMembershipList(*(int*)(requester->addr),
+                             *(short*)(requester-> addr + 4),
+                             *(long*)(msg_content + sizeof(Address) + 1),
+                             par->getcurrtime());
 
-        SendJOINREPLYMessage(&new_node_address);
 
     } else if (msg_type == JOINREP) {
-        Address* source = (Address*) data;
+        Address* source = (Address*) msg_content;
         memberNode->inGroup = true;
-
-        // source->addr point den char[0]
-        // (int*) source->addr convert to int memory
-        // *(int*)(source->addr) convert to 32-bits int value
 
         UpdateMembershipList(*(int*)(source->addr),
                              *(short*)(source-> addr + 4),
-                             *(long*)(data + sizeof(Address) + 1),
+                             *(long*)(msg_content + sizeof(Address) + 1),
                              par->getcurrtime());
 
-    } else if (msg_type == HEARTBEAT) {
+        size_t reply_size = sizeof(MessageHdr) + sizeof(Address) + sizeof(long) + 1;
+        MessageHdr * reply_data = (MessageHdr*)malloc(reply_size);
+        reply_data->msgType = JOINREP;
 
-        // read message data
-        int id;
-        short port;
-        long heartbeat;
-        memcpy(&id, data + sizeof(MessageHdr), sizeof(int));
-        memcpy(&port, data + sizeof(MessageHdr) + sizeof(int), sizeof(short));
-        memcpy(&heartbeat, data + sizeof(MessageHdr) + sizeof(int) + sizeof(short), sizeof(long));
+        memcpy((char*)(reply_data + 1), &(memberNode->addr), sizeof(Address));
+        memcpy((char*)(reply_data) + 1 + sizeof(Address) + 1,
+                &(memberNode->heartbeat), sizeof(long));
 
-        // create new membership entry and add to the membership list of the node
-        if (this->GetNodeInMembershipList(id) != NULL) {
-            UpdateMembershipList(id, port, heartbeat, memberNode->timeOutCounter);
-        } else {
-            // update the membership entry
-            MemberListEntry * node = GetNodeInMembershipList(id);
-            node->setheartbeat(heartbeat);
-            node->settimestamp(memberNode->timeOutCounter);
-        }
+        emulNet->ENsend()
+        free(reply_data);
     }
 
     return true;
 }
 
 void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long timestamp) {
+    Address entry_address = GetNodeAddressFromIdAndPort(id, port);
+    bool already_in_list = false;
 
-    MemberListEntry* new_entry;
-    if (!CheckIfNodeInMembershipList(id, port, heartbeat)) {
-        new_entry = new MemberListEntry(id, port, heartbeat, timestamp);
+    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
+         it != memberNode->memberList.end(); it++) {
+
+        if(GetNodeAddressFromIdAndPort(it->id, it->port) == entry_address ) { //already exists
+            already_in_list = true;
+            if (it->getheartbeat() < heartbeat) { //update
+                it->settimestamp(par->getcurrtime());
+                it->setheartbeat(heartbeat);
+            }
+        }
+    }
+
+    if (!already_in_list) {
+        MemberListEntry new_entry = MemberListEntry(id, port, heartbeat, timestamp);
         memberNode->memberList.push_back(new_entry);
     }
 
@@ -313,26 +311,13 @@ void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long time
 
 }
 
-bool MP1Node::CheckIfNodeInMembershipList(int id, short port, long heartbeat) {
-    Address entry_address = GetNodeAddress(id, port);
-    bool already_in_list = false;
-
-    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
-         it != memberNode->memberList.end(); it++) {
-        if(GetNodeAddress(it->id, it->port) == entry_address ) { //already exists
-            already_in_list = true;
-            if (heartbeat == -1) {
-                it->setheartbeat(-1);
-            }
-            if (it->getheartbeat() < heartbeat) { //update
-                it->settimestamp(par->getcurrtime());
-                it->setheartbeat(heartbeat);
-            }
-        }
-    }
-
-    return already_in_list;
+Address MP1Node::GetNodeAddressFromIdAndPort(int id, short port) {
+    Address node_address;
+    memcpy(&node_address.addr, &id, sizeof(int));
+    memcpy(&node_address.addr[4], &port, sizeof(int));
+    return node_address;
 }
+
 
 
 
@@ -353,7 +338,7 @@ void MP1Node::nodeLoopOps() {
         // send heatbeat msg to all nodes
         for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
              it != memberNode->memberList.end(); it++) {
-            Address nodeAddress = GetNodeAddress(it->id, it->getport());
+            Address nodeAddress = GetNodeAddressFromIdAndPort(it->id, it->getport());
             if (!IsAddressEqualToNodeAddress(&nodeAddress)) {
                SendHEARTBEATMessage(&nodeAddress);
             }
@@ -367,7 +352,7 @@ void MP1Node::nodeLoopOps() {
 
     //check if any node has failed
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin(); it != memberNode->memberList.end(); ++it) {
-        Address nodeAddress = GetNodeAddress(it->id, it->getport());
+        Address nodeAddress = GetNodeAddressFromIdAndPort(it->id, it->getport());
 
         if (!IsAddressEqualToNodeAddress(&nodeAddress)) {
             // after T(cleanup) seconds, it will delete the member from the list.
@@ -439,15 +424,6 @@ void MP1Node::printAddress(Address *addr)
                                                        addr->addr[3], *(short*)&addr->addr[4]) ;    
 }
 
-
-Address MP1Node::GetNodeAddress(int id, short port) {
-    Address nodeAddress;
-    memset(&nodeAddress, 0, sizeof(Address));
-    *(int*)(&nodeAddress.addr) = id;
-    *(short*)(&nodeAddress.addr[4]) = port;
-
-    return nodeAddress;
-}
 
 
 // get node with id

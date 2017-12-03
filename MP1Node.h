@@ -80,7 +80,7 @@ public:
 	virtual ~MP1Node();
 
 
-	Address GetNodeAddress(int id, short port);
+	Address GetNodeAddressFromIdAndPort(int id, short port);
 	void UpdateMembershipList(int id, short port, long heartbeat, long timeStamp);
 	MemberListEntry* GetNodeInMembershipList(int id);
 

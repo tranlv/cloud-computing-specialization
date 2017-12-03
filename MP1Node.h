@@ -21,7 +21,7 @@
  */
 #define TREMOVE 20
 #define TFAIL 5
-
+#define TPING 2
 #define FAIL -1
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
@@ -76,7 +76,7 @@ public:
 	void nodeLoopOps();
 	int isNullAddress(Address *addr);
 	Address getJoinAddress();
-	void initMemberListTable(Member *memberNode);
+	void initMemberListTable(Member *memberNode, int id, int port);
 	void printAddress(Address *addr);
 	virtual ~MP1Node();
 

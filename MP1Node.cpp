@@ -93,8 +93,9 @@ void MP1Node::nodeStart(char *servaddrstr, short servport) {
  * DESCRIPTION: Find out who I am and start up
  */
 int MP1Node::initThisNode(Address *joinaddr) {
-	//int id = *(int*)(&memberNode->addr.addr);
-	//int port = *(short*)(&memberNode->addr.addr[4]);
+
+	int id = *(int*)(&memberNode->addr.addr);
+	int port = *(short*)(&memberNode->addr.addr[4]);
 
 	memberNode->bFailed = false;
 	memberNode->inited = true;
@@ -102,9 +103,10 @@ int MP1Node::initThisNode(Address *joinaddr) {
     // node is up!
 	memberNode->nnb = 0;
 	memberNode->heartbeat = 0;
-	memberNode->pingCounter = TFAIL;
+	//memberNode->pingCounter = TFAIL;
+    memberNode->pingCounter = TPING;
 	memberNode->timeOutCounter = -1;
-    initMemberListTable(memberNode);
+    initMemberListTable(memberNode, id, port);
 
     return 0;
 }
@@ -365,7 +367,7 @@ void MP1Node::nodeLoopOps() {
         PingOthers();
 
         //reser ping coutter to 5
-        memberNode->pingCounter = TFAIL;
+        memberNode->pingCounter = TPING;
     } else {
         memberNode->pingCounter--;
     }
@@ -471,8 +473,10 @@ Address MP1Node::getJoinAddress() {
  *
  * DESCRIPTION: Initialize the membership add
  */
-void MP1Node::initMemberListTable(Member *memberNode) {
+void MP1Node::initMemberListTable(Member *memberNode, int id, int port) {
 	memberNode->memberList.clear();
+    MemberListEntry me = MemberListEntry(id, port, memberNode->heartbeat, par->getcurrtime());
+    memberNode->memberList.push_back(me);
 }
 
 /**

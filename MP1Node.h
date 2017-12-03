@@ -58,7 +58,6 @@ private:
 	char NULLADDR[6];
 
 
-
 public:
 	MP1Node(Member *, Params *, EmulNet *, Log *, Address *);
 	Member * getMemberNode() {
@@ -76,7 +75,7 @@ public:
 	void nodeLoopOps();
 	int isNullAddress(Address *addr);
 	Address getJoinAddress();
-	void initMemberListTable(Member *memberNode, int id, int port);
+	void initMemberListTable(Member *memberNode, int id, short port);
 	void printAddress(Address *addr);
 	virtual ~MP1Node();
 
@@ -85,7 +84,7 @@ public:
 	void PingOthers();
 	void CheckFailure();
 	Address GetNodeAddressFromIdAndPort(int id, short port);
-	char * SerializeData(char * buffer);
+	char* SerializeData(char* buffer);
 	vector<MemberListEntry> DeserializeData(char* table, int rows);
 
 };

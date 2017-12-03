@@ -81,7 +81,7 @@ public:
 
 
 	void UpdateMembershipList(int id, short port, long heartbeat, long timestamp);
-	void PingOthers();
+	bool PingOthers();
 	void CheckFailure();
 	Address GetNodeAddressFromIdAndPort(int id, short port);
 	char* SerializeData(char* buffer);

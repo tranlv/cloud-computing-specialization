@@ -103,7 +103,7 @@ int MP1Node::initThisNode(Address *joinaddr) {
     // node is up!
 	memberNode->nnb = 0;
 	memberNode->heartbeat = 0;
-	memberNode->pingCounter = TFAIL;
+	memberNode->pingCounter = 2;
 	memberNode->timeOutCounter = -1;
     initMemberListTable(memberNode, id, (short)port);
 
@@ -329,7 +329,7 @@ void MP1Node::CheckFailure() {
 }
 
 
-void MP1Node::PingOthers() {
+bool MP1Node::PingOthers() {
     size_t ping_size = sizeof(MessageHdr) + ((sizeof(Address) + sizeof(long))*memberNode->memberList.size());
     MessageHdr * ping_data = (MessageHdr*)malloc(ping_size);
 
@@ -348,6 +348,8 @@ void MP1Node::PingOthers() {
     }
 
     free(ping_data);
+
+    return true;
 }
 
 
@@ -437,13 +439,15 @@ void MP1Node::nodeLoopOps() {
         PingOthers();
 
         //reser ping coutter to 5
-        memberNode->pingCounter = TFAIL;
+        memberNode->pingCounter = 2;
     } else {
         memberNode->pingCounter--;
     }
 
     //check if any node has failed
     CheckFailure();
+
+    return;
 }
 
 

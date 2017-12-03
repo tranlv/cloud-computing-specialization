@@ -301,7 +301,7 @@ void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long time
         }
     }
 
-    if (heartbeat == -1){ // I've already removed it from my table.
+    if (heartbeat == FAIL){ // I've already removed it from my table.
         return;
     }
 
@@ -376,13 +376,14 @@ void MP1Node::nodeLoopOps() {
 }
 
 void MP1Node::CheckFailure() {
-
+    Address peer;
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin() + 1;
         it != memberNode->memberList.end(); it++) {
 
-        Address peer = GetNodeAddressFromIdAndPort(it->id, it->port);
         if (par->getcurrtime() - it->gettimestamp() > TREMOVE) {
+
 #ifdef DEBUGLOG
+            peer = GetNodeAddressFromIdAndPort(it->id, it->port);
             log->logNodeRemove(&memberNode->addr, &peer);
 #endif
             memberNode->memberList.erase(it);
@@ -400,15 +401,19 @@ void MP1Node::CheckFailure() {
 void MP1Node::PingOthers() {
     size_t ping_size = sizeof(MessageHdr) + ((sizeof(Address) + sizeof(long))*memberNode->memberList.size());
     MessageHdr * ping_data = (MessageHdr*)malloc(ping_size);
+
     ping_data->msgType = PING;
-    char* data = SerializeData((char*) (ping_data + 1));
+
+    SerializeData((char*) (ping_data + 1));
+
+    Address peer;
 
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin() + 1;
          it != memberNode->memberList.end(); it++) {
 
-        Address peer = GetNodeAddressFromIdAndPort(it->id, it->port);
+        peer = GetNodeAddressFromIdAndPort(it->id, it->port);
         //send to other peer
-        emulNet->ENsend(&memberNode->addr, &peer, data, ping_size);
+        emulNet->ENsend(&memberNode->addr, &peer,  (char*) ping_data, ping_size);
     }
 
     free(ping_data);
@@ -417,8 +422,8 @@ void MP1Node::PingOthers() {
 
 char* MP1Node::SerializeData(char *buffer) {
     int index = 0;
-    int entry_size = sizeof(Address) + sizeof(long);
-    char *entry = (char*)malloc(entry_size);
+    size_t entry_size = sizeof(Address) + sizeof(long);
+    char *entry = (char*)malloc((int)(entry_size));
 
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
          it != memberNode->memberList.end(); it++, index += entry_size) {

@@ -57,6 +57,10 @@ private:
 	Member *memberNode;
 	char NULLADDR[6];
 
+	void UpdateMembershipList(MemberListEntry entry);
+	void PingOthers();
+	void CheckFailure();
+
 public:
 	MP1Node(Member *, Params *, EmulNet *, Log *, Address *);
 	Member * getMemberNode() {
@@ -79,10 +83,6 @@ public:
 	virtual ~MP1Node();
 
 
-	void UpdateMembershipList(MemberListEntry entry);
-
-	void PingOthers();
-	void CheckFailure();
 
 	char * SerializeData(char * buffer);
 	vector<MemberListEntry> DeserializeData(char* table, int rows);

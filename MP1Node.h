@@ -21,6 +21,8 @@
  */
 #define TREMOVE 20
 #define TFAIL 5
+
+#define FAIL -1
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
  */

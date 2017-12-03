@@ -158,11 +158,8 @@ int MP1Node::introduceSelfToGroup(Address *joinaddr) {
  * DESCRIPTION: Wind up this node and clean up state
  */
 int MP1Node::finishUpThisNode(){
-    //Node is down
-    memberNode->inited = false;
 
-    //clean up node tate
-    return 0;
+    return 1;
 }
 
 
@@ -223,8 +220,7 @@ void MP1Node::checkMessages() {
  */
 bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
-    MessageHdr *msg = (MessageHdr*) malloc(size * sizeof(char));
-    memcpy(msg, data, sizeof(MessageHdr));
+    MessageHdr *msg = (MessageHdr*) data;
     MsgTypes msg_type = msg->msgType;
 
     char * msg_content = data + sizeof(MessageHdr);

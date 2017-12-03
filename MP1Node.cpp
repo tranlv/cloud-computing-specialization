@@ -224,8 +224,6 @@ void MP1Node::checkMessages() {
  */
 bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
-    bool answer = true;
-
     MessageHdr* msg = (MessageHdr*) data;
     MsgTypes msg_type = msg->msgType;
 
@@ -237,17 +235,19 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
         // (int*) source ->addr convert to int memory
         // *(int*)(source ->addr) convert to 32-bits int value
         memberNode->inGroup = true;
-        UpdateMembershipList(*(int*)(source ->addr),
-                             *(short*)(source -> addr + 4),
-                             *(long*)(msg_content + sizeof(Address) + 1),
-                             par->getcurrtime());
+        MemberListEntry entry = MemberListEntry(*(int*)(source ->addr),
+                                                *(short*)(source -> addr + 4),
+                                                *(long*)(msg_content + sizeof(Address) + 1),
+                                                par->getcurrtime());
+        UpdateMembershipList(entry);
 
     } else if (msg_type == JOINREQ) {
 
-        UpdateMembershipList(*(int*)(source  ->addr),
-                             *(short*)(source  -> addr + 4),
-                             *(long*)(msg_content + sizeof(Address) + 1),
-                             par->getcurrtime());
+        MemberListEntry entry = MemberListEntry(*(int*)(source  ->addr),
+                                                *(short*)(source  -> addr + 4),
+                                                *(long*)(msg_content + sizeof(Address) + 1),
+                                                par->getcurrtime());
+        UpdateMembershipList(entry);
 
         //malloc: Allocates a block of size bytes of memory, returning a pointer to the beginning of the block.
 
@@ -269,16 +269,18 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
         for (vector<MemberListEntry>::iterator it = rec_membership_list.begin();
                 it != rec_membership_list.end(); it++) {
-            UpdateMembershipList(it->id, it->port, it->heartbeat, it->timestamp);
+
+            UpdateMembershipList(*it);
         }
     }
 
-    return answer;
+    return true;
 }
 
-void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long timestamp) {
+void MP1Node::UpdateMembershipList(MemberListEntry entry) {
 
-    Address entry_address = GetNodeAddressFromIdAndPort(id, port);
+    Address entry_address = GetNodeAddressFromIdAndPort(entry.id, entry.port);
+    long heartbeat = entry.gettimestamp();
 
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
          it != memberNode->memberList.end(); it++) {
@@ -308,7 +310,7 @@ void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long time
         return;
     }
 
-    MemberListEntry new_entry = MemberListEntry(id, port, heartbeat, timestamp);
+    MemberListEntry new_entry = MemberListEntry(entry);
     memberNode->memberList.push_back(new_entry);
 #ifdef DEBUGLOG
         //void logNodeAdd(Address *, Address *);

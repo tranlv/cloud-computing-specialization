@@ -80,7 +80,7 @@ public:
 
 
 	Address GetNodeAddressFromIdAndPort(int id, short port);
-	void UpdateMembershipList(int id, short port, long heartbeat, long timeStamp);
+	void UpdateMembershipList(MemberListEntry entry);
 
 	void PingOthers();
 	void CheckFailure();

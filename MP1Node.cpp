@@ -162,24 +162,9 @@ int MP1Node::finishUpThisNode(){
     memberNode->inited = false;
 
     //clean up node tate
-    CleanupNodeState();
     return 0;
 }
 
-void MP1Node::CleanupNodeState() {
-
-    //indicating  this member is not in the group
-    memberNode->inGroup = false;
-
-    // number of my neighbors
-    memberNode->nnb = 0;
-
-    // the node's own heartbeat
-    memberNode->heartbeat = 0;
-    memberNode->pingCounter = TFAIL;
-    memberNode->timeOutCounter = -1;
-    initMemberListTable(memberNode);
-}
 
 
 /**
@@ -267,13 +252,14 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
                              *(long*)(msg_content + sizeof(Address) + 1),
                              par->getcurrtime());
 
+        //malloc: Allocates a block of size bytes of memory, returning a pointer to the beginning of the block.
+
         size_t reply_size = sizeof(MessageHdr) + sizeof(Address) + sizeof(long) + 1;
         MessageHdr * reply_data = (MessageHdr*)malloc(reply_size);
         reply_data->msgType = JOINREP;
 
         memcpy((char*)(reply_data + 1), &(memberNode->addr), sizeof(Address));
-        memcpy((char*)(reply_data) + 1 + sizeof(Address) + 1,
-                &(memberNode->heartbeat), sizeof(long));
+        memcpy((char*)(reply_data) + 1 + sizeof(Address) + 1, &(memberNode->heartbeat), sizeof(long));
 
         //send reply to entry node
         emulNet->ENsend(&memberNode->addr, requester, (char*) reply_data, reply_size);
@@ -331,55 +317,11 @@ Address MP1Node::GetNodeAddressFromIdAndPort(int id, short port) {
  */
 void MP1Node::nodeLoopOps() {
 
-    //check if node should send a new heartbeat
-    if (memberNode->heartbeat == 0) {
-        //increment no of heartbeat
-        memberNode->heartbeat++;
-
-        // send heatbeat msg to all nodes
-        for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
-             it != memberNode->memberList.end(); it++) {
-            Address nodeAddress = GetNodeAddressFromIdAndPort(it->id, it->getport());
-            if (!IsAddressEqualToNodeAddress(&nodeAddress)) {
-               SendHEARTBEATMessage(&nodeAddress);
-            }
-        }
-        //reset ping counter
-        memberNode->pingCounter = TFAIL;
-    } else {
-        // decrement ping counter
-        memberNode->pingCounter--;
-    }
-
-    //check if any node has failed
-    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin(); it != memberNode->memberList.end(); ++it) {
-        Address nodeAddress = GetNodeAddressFromIdAndPort(it->id, it->getport());
-
-        if (!IsAddressEqualToNodeAddress(&nodeAddress)) {
-            // after T(cleanup) seconds, it will delete the member from the list.
-            if(memberNode->timeOutCounter - it->timestamp > TREMOVE) {
-                //remove node
-                memberNode->memberList.erase(it);
-
-                #ifdef DEBUGLOG
-                log->logNodeRemove(&memberNode->addr, &nodeAddress);
-                #endif
-
-                break;
-            }
-        }
-    }
-
-    //increment over counter
-    memberNode->timeOutCounter++;
 
     return;
 }
 
-bool MP1Node::IsAddressEqualToNodeAddress (Address * address) {
-    return memcmp((char*)&memberNode->addr.addr, (char*)&(address->addr), sizeof(memberNode->addr.addr));
 
-}
 
 /**
  * FUNCTION NAME: isNullAddress
@@ -427,125 +369,6 @@ void MP1Node::printAddress(Address *addr)
 
 
 
-// get node with id
-MemberListEntry* MP1Node::GetNodeInMembershipList(int id) {
-    MemberListEntry* entry = NULL;
-
-    for (std::vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
-         it != memberNode-> memberList.end(); ++it) {
-        if(it->id == id) {
-            entry = it.base();
-            break;
-        }
-    }
-
-    return entry;
-}
 
 
-void MP1Node::SendJOINREQUESTMessage(Address* join_address) {
-    size_t msg_size = sizeof(MessageHdr) + sizeof(join_address->addr) + sizeof(long) +1 ;
-    MessageHdr * msg = (MessageHdr*) malloc(msg_size * sizeof(char));
 
-    // Create JOINREQ message: format of data is {struct Address myaddr}
-    msg->msgType = JOINREQ;
-    memcpy((char*)(msg + 1), &memberNode->addr.addr, sizeof(memberNode->addr.addr));
-    memcpy((char*)(msg + 1) + sizeof(memberNode->addr.addr), &memberNode->heartbeat, sizeof(long));
-
-#ifdef DEBUGLOG
-    log->LOG(&memberNode->addr, "Trying to join...");
-#endif
-
-    // send JOINREQ mesg to introducer member
-    emulNet->ENsend(&memberNode->addr, join_address, (char*)msg, msg_size);
-
-    free(msg);
-}
-
-
-void MP1Node::SendJOINREPLYMessage(Address* destination_address) {
-    size_t membership_list_size = sizeof(int) + sizeof(short) + sizeof(long) + sizeof(long);
-
-    size_t msg_size = sizeof(MessageHdr) + sizeof(int) + (memberNode->memberList.size() * membership_list_size);
-    MessageHdr * msg = (MessageHdr*) malloc(msg_size * sizeof(char));
-    msg->msgType = JOINREP;
-
-    //serialize member list
-    SerializeMembershipListForJOINREPMessageSending(msg);
-
-    // send joinreply message to the new node
-    emulNet->ENsend(&memberNode->addr, destination_address, (char*)msg, msg_size);
-
-    free(msg);
-}
-
-void MP1Node::SendHEARTBEATMessage(Address* destination_address) {
-    size_t msg_size = sizeof(MessageHdr) + sizeof(destination_address->addr) + sizeof(long) + 1;
-    MessageHdr *msg = (MessageHdr *) malloc(msg_size * sizeof(char));
-
-    // Create HEARTBEAT message
-    msg->msgType = HEARTBEAT;
-    memcpy((char*)(msg + 1), &memberNode->addr.addr, sizeof(memberNode->addr.addr));
-    memcpy((char*)(msg + 1) + sizeof(memberNode->addr.addr), &memberNode->heartbeat, sizeof(long));
-
-    // Send HEARTBEAT message to destination node
-    emulNet->ENsend(&memberNode->addr, destination_address, (char *)msg, msg_size);
-
-    free(msg);
-}
-
-void MP1Node::SerializeMembershipListForJOINREPMessageSending(MessageHdr* msg) {
-    // serialize number of items
-    int number_of_items = memberNode->memberList.size();
-    memcpy((char*) (msg + 1), &number_of_items, sizeof(int));
-
-    //serialize number of items
-    int offset = sizeof(int);
-
-    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
-         it != memberNode->memberList.end(); it++) {
-        memcpy((char*)(msg + 1) + offset, &it->id, sizeof(int));
-        offset += sizeof(int);
-
-        memcpy((char *)(msg + 1) + offset, &it->port, sizeof(short));
-        offset += sizeof(short);
-
-        memcpy((char *)(msg + 1) + offset, &it->heartbeat, sizeof(long));
-        offset += sizeof(long);
-
-        memcpy((char *)(msg + 1) + offset, &it->timestamp, sizeof(long));
-        offset += sizeof(long);
-    }
-}
-
-
-void MP1Node::DeserializeMembershipListForJOINREPMessageReceiving(char *data) {
-    // read msg data
-    int number_of_items;
-    memcpy(&number_of_items, data + sizeof(MessageHdr), sizeof(int));
-
-    // deserialize member list of entries
-    int offset = sizeof(int);
-
-    for (int i =0; i< number_of_items; i++) {
-        int id;
-        short port;
-        long heartbeat;
-        long timestamp;
-
-        memcpy(&id, data + sizeof(MessageHdr) + offset, sizeof(int));
-        offset += sizeof(int);
-
-        memcpy(&port, data + sizeof(MessageHdr) + offset, sizeof(short));
-        offset += sizeof(short);
-
-        memcpy(&heartbeat, data + sizeof(MessageHdr) + offset, sizeof(long));
-        offset += sizeof(long);
-
-        memcpy(&timestamp, data + sizeof(MessageHdr) + offset, sizeof(long));
-        offset += sizeof(long);
-
-        UpdateMembershipList(id, port, heartbeat, timestamp);
-
-    }
-}

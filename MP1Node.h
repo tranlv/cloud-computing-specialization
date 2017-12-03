@@ -82,18 +82,8 @@ public:
 
 	Address GetNodeAddressFromIdAndPort(int id, short port);
 	void UpdateMembershipList(int id, short port, long heartbeat, long timeStamp);
-	MemberListEntry* GetNodeInMembershipList(int id);
-
-	void SendJOINREQUESTMessage(Address* join_address);
-	void SendJOINREPLYMessage(Address* destination_address);
-	void SendHEARTBEATMessage(Address* destination_address);
 
 
-	void SerializeMembershipListForJOINREPMessageSending(MessageHdr *msg);
-	void DeserializeMembershipListForJOINREPMessageReceiving(char *data);
-    bool IsAddressEqualToNodeAddress(Address *address);
-	void CleanupNodeState();
-	bool CheckIfNodeInMembershipList(int id, short port, long heartbeat);
 };
 
 #endif /* _MP1NODE_H_ */

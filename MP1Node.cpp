@@ -103,7 +103,7 @@ int MP1Node::initThisNode(Address *joinaddr) {
     // node is up!
 	memberNode->nnb = 0;
 	memberNode->heartbeat = 0;
-	memberNode->pingCounter = 4;
+	memberNode->pingCounter = TPING;
 	memberNode->timeOutCounter = -1;
     initMemberListTable(memberNode, id, (short)port);
 
@@ -186,8 +186,6 @@ void MP1Node::nodeLoop() {
 
     // ...then jump in and share your responsibilites!
     nodeLoopOps();
-
-    return;
 }
 
 /**
@@ -206,7 +204,6 @@ void MP1Node::checkMessages() {
     	memberNode->mp1q.pop();
     	recvCallBack((void *)memberNode, (char *)ptr, size);
     }
-    return;
 }
 
 Address MP1Node::GetNodeAddressFromIdAndPort(int id, short port) {
@@ -219,7 +216,7 @@ Address MP1Node::GetNodeAddressFromIdAndPort(int id, short port) {
 char* MP1Node::SerializeData(char *buffer) {
     int index = 0;
     size_t entry_size = sizeof(Address) + sizeof(long);
-    char *entry = (char*)malloc((int)(entry_size));
+    auto *entry = (char*)malloc((int)(entry_size));
 
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
          it != memberNode->memberList.end(); it++, index += entry_size) {
@@ -244,7 +241,7 @@ vector<MemberListEntry> MP1Node::DeserializeData(char* table, int rows) {
 
     for (int i = 0; i < rows; i++, table += entry_size) {
 
-        Address* address = (Address*) table;
+        auto* address = (Address*) table;
         int id;
         short port;
         long heartbeat;
@@ -331,7 +328,7 @@ void MP1Node::CheckFailure() {
 
 bool MP1Node::PingOthers() {
     size_t ping_size = sizeof(MessageHdr) + ((sizeof(Address) + sizeof(long))*memberNode->memberList.size());
-    MessageHdr * ping_data = (MessageHdr*)malloc(ping_size);
+    auto * ping_data = (MessageHdr*)malloc(ping_size);
 
     ping_data->msgType = PING;
 
@@ -367,11 +364,11 @@ bool MP1Node::PingOthers() {
  */
 bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
-    MessageHdr* msg = (MessageHdr*) data;
+    auto* msg = (MessageHdr*) data;
     MsgTypes msg_type = msg->msgType;
 
     char* msg_content = data + sizeof(MessageHdr);
-    Address* source = (Address*) msg_content;
+    auto* source = (Address*) msg_content;
 
     if (msg_type == JOINREP) {
         // source ->addr point den char[0]
@@ -395,7 +392,7 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
         //malloc: Allocates a block of size bytes of memory, returning a pointer to the beginning of the block.
 
         size_t reply_size = sizeof(MessageHdr) + sizeof(Address) + sizeof(long) + 1;
-        MessageHdr * reply_data = (MessageHdr*)malloc(reply_size);
+        auto * reply_data = (MessageHdr*)malloc(reply_size);
         reply_data->msgType = JOINREP;
 
         memcpy((char*)(reply_data + 1), &(memberNode->addr), sizeof(Address));
@@ -407,8 +404,8 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
     } else if (msg_type == PING) {
         size_t message_content_size = size - sizeof(MessageHdr);
-        int size_in_int = (int) (message_content_size);
-        int row_size = (int)(sizeof(Address) + sizeof(long));
+        auto size_in_int = (int) (message_content_size);
+        auto row_size = (int)(sizeof(Address) + sizeof(long));
 
         vector<MemberListEntry> rec_membership_list = DeserializeData(msg_content, size_in_int/row_size);
 
@@ -438,16 +435,14 @@ void MP1Node::nodeLoopOps() {
         memberNode->memberList[0].heartbeat++;
         PingOthers();
 
-        //reset ping 
-        memberNode->pingCounter = 4;
+        //reset ping
+        memberNode->pingCounter = TPING;
     } else {
         memberNode->pingCounter--;
     }
 
     //check if any node has failed
     CheckFailure();
-
-    return;
 }
 
 

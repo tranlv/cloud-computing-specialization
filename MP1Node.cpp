@@ -209,10 +209,10 @@ void MP1Node::checkMessages() {
     return;
 }
 
-Address MP1Node::GetNodeAddress(MemberListEntry entry) {
+Address MP1Node::GetNodeAddressFromIdAndPort(int id, short port) {
     Address node_address;
-    memcpy(&node_address.addr, &entry.id, sizeof(int));
-    memcpy(&node_address.addr[4], &entry.port, sizeof(int));
+    memcpy(&node_address.addr, &id, sizeof(int));
+    memcpy(&node_address.addr[4], &port, sizeof(int));
     return node_address;
 }
 
@@ -224,7 +224,7 @@ char* MP1Node::SerializeData(char *buffer) {
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
          it != memberNode->memberList.end(); it++, index += entry_size) {
 
-        Address addr = GetNodeAddress(*it);
+        Address addr = GetNodeAddressFromIdAndPort(it->getid(), it->getport());
         long heartbeat = it->getheartbeat();
 
         memcpy(entry, &addr, sizeof(Address));
@@ -266,13 +266,13 @@ vector<MemberListEntry> MP1Node::DeserializeData(char* table, int rows) {
 
 void MP1Node::UpdateMembershipList(MemberListEntry entry) {
 
-    Address entry_address = GetNodeAddress(entry);
+    Address entry_address = GetNodeAddressFromIdAndPort(entry.getid(), entry.getport());
     long heartbeat = entry.gettimestamp();
 
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
          it != memberNode->memberList.end(); it++) {
 
-        if (GetNodeAddress(*it) == entry_address ) { //already exists
+        if (GetNodeAddressFromIdAndPort(it->getid(), it->getport()) == entry_address ) { //already exists
 
             if (heartbeat == -1) {
                 it->setheartbeat(-1);
@@ -314,7 +314,7 @@ void MP1Node::CheckFailure() {
         if (par->getcurrtime() - it->gettimestamp() > TREMOVE) {
 
 #ifdef DEBUGLOG
-            peer = GetNodeAddress(*it);
+            peer = GetNodeAddressFromIdAndPort(it->getid(),it->getport());
             log->logNodeRemove(&memberNode->addr, &peer);
 #endif
             memberNode->memberList.erase(it);
@@ -343,7 +343,7 @@ void MP1Node::PingOthers() {
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin() + 1;
          it != memberNode->memberList.end(); it++) {
 
-        peer = GetNodeAddress(*it);
+        peer = GetNodeAddressFromIdAndPort(it->getid(), it->getport());
         //send to other peer
         emulNet->ENsend(&memberNode->addr, &peer,  (char*) ping_data, ping_size);
     }

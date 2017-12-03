@@ -84,7 +84,7 @@ public:
 	void UpdateMembershipList(MemberListEntry entry);
 	void PingOthers();
 	void CheckFailure();
-	Address GetNodeAddress(MemberListEntry entry);
+	Address GetNodeAddressFromIdAndPort(int id, short port);
 	char * SerializeData(char * buffer);
 	vector<MemberListEntry> DeserializeData(char* table, int rows);
 

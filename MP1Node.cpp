@@ -230,7 +230,11 @@ void MP1Node::checkMessages() {
  * FUNCTION NAME: recvCallBack
  *
  * DESCRIPTION: Message handler for different message types
- *              where the nodes receive messages           
+ *              where the nodes receive messages
+ *
+ * PARAMS:
+ *        char *data : new entry
+ *
  */
 bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
@@ -257,10 +261,18 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
         SendJOINREPLYMessage(&new_node_address);
 
     } else if (msg_type == JOINREP) {
+        Address* source = (Address*) data;
         memberNode->inGroup = true;
 
-        //Deserialize member list and items to the membership list of the node
-        DeserializeMembershipListForJOINREPMessageReceiving(data);
+        // source->addr point den char[0]
+        // (int*) source->addr convert to int memory
+        // *(int*)(source->addr) convert to 32-bits int value
+
+        UpdateMembershipList(*(int*)(source->addr),
+                             *(short*)(source-> addr + 4),
+                             *(long*)(data + sizeof(Address) + 1),
+                             par->getcurrtime());
+
     } else if (msg_type == HEARTBEAT) {
 
         // read message data
@@ -284,6 +296,44 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
     return true;
 }
+
+void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long timestamp) {
+
+    MemberListEntry* new_entry;
+    if (!CheckIfNodeInMembershipList(id, port, heartbeat)) {
+        new_entry = new MemberListEntry(id, port, heartbeat, timestamp);
+        memberNode->memberList.push_back(new_entry);
+    }
+
+
+#ifdef DEBUGLOG
+    //void logNodeAdd(Address *, Address *);
+    log->logNodeAdd(& memberNode->addr, & entry_address);
+#endif
+
+}
+
+bool MP1Node::CheckIfNodeInMembershipList(int id, short port, long heartbeat) {
+    Address entry_address = GetNodeAddress(id, port);
+    bool already_in_list = false;
+
+    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
+         it != memberNode->memberList.end(); it++) {
+        if(GetNodeAddress(it->id, it->port) == entry_address ) { //already exists
+            already_in_list = true;
+            if (heartbeat == -1) {
+                it->setheartbeat(-1);
+            }
+            if (it->getheartbeat() < heartbeat) { //update
+                it->settimestamp(par->getcurrtime());
+                it->setheartbeat(heartbeat);
+            }
+        }
+    }
+
+    return already_in_list;
+}
+
 
 
 /**
@@ -387,43 +437,6 @@ void MP1Node::printAddress(Address *addr)
 {
     printf("%d.%d.%d.%d:%d \n",  addr->addr[0],addr->addr[1],addr->addr[2],
                                                        addr->addr[3], *(short*)&addr->addr[4]) ;    
-}
-
-
-void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long timestamp) {
-
-    //if new node is not in the membership list then create and add a new member list entry
-   // if (this->GetNodeInMembershipList(id) == NULL) {
-   //     MemberListEntry *newEntry = new MemberListEntry(id, port, heartbeat, timeStamp);
-    //    memberNode->memberList.insert(memberNode->memberList.end(), *newEntry);
-    //}
-    bool already_in_list = false;
-
-    Address entry_address = GetNodeAddress(id, port);
-    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
-            it != memberNode->memberList.end(); it++) {
-        if(GetNodeAddress(it->id, it->port) == entry_address ) { //already exists
-            already_in_list = true;
-            if (heartbeat == -1) {
-                it->setheartbeat(-1);
-            }
-            if (it->getheartbeat() < heartbeat) { //update
-                it->settimestamp(par->getcurrtime());
-                it->setheartbeat(heartbeat);
-            }
-        }
-    }
-
-    if (!already_in_list) {
-        MemberListEntry* new_entry = new MemberListEntry(id, port, heartbeat, timestamp);
-        memberNode->memberList.insert(memberNode->memberList.end(), new_entry);
-    }
-
-#ifdef DEBUGLOG
-        //void logNodeAdd(Address *, Address *);
-        log->logNodeAdd(& memberNode->addr, & entry_address);
-#endif
-
 }
 
 

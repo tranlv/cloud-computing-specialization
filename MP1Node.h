@@ -93,6 +93,7 @@ public:
 	void DeserializeMembershipListForJOINREPMessageReceiving(char *data);
     bool IsAddressEqualToNodeAddress(Address *address);
 	void CleanupNodeState();
+	bool CheckIfNodeInMembershipList(int id, short port, long heartbeat);
 };
 
 #endif /* _MP1NODE_H_ */

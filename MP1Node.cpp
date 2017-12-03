@@ -7,8 +7,6 @@
 
 #include "MP1Node.h"
 
-#include <sstream>
-
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
  */

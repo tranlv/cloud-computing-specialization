@@ -225,22 +225,20 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
     MsgTypes msg_type = msg->msgType;
 
     char* msg_content = data + sizeof(MessageHdr);
-
     Address* source = (Address*) msg_content;
+
     if (msg_type == JOINREP) {
-
-
         // source ->addr point den char[0]
         // (int*) source ->addr convert to int memory
         // *(int*)(source ->addr) convert to 32-bits int value
-
+        memberNode->inGroup = true;
         UpdateMembershipList(*(int*)(source ->addr),
                              *(short*)(source -> addr + 4),
                              *(long*)(msg_content + sizeof(Address) + 1),
                              par->getcurrtime());
 
     } else if (msg_type == JOINREQ) {
-        memberNode->inGroup = true;
+
         UpdateMembershipList(*(int*)(source  ->addr),
                              *(short*)(source  -> addr + 4),
                              *(long*)(msg_content + sizeof(Address) + 1),
@@ -268,7 +266,6 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
                 it != rec_membership_list.end(); it++) {
             UpdateMembershipList(it->id, it->port, it->heartbeat, it->timestamp);
         }
-
     }
 
     return true;
@@ -287,7 +284,7 @@ void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long time
             if (heartbeat == FAIL) {
                 it->setheartbeat(FAIL);
             }
-            
+
             if (it->getheartbeat() < heartbeat) { //update
                 it->settimestamp(par->getcurrtime());
                 it->setheartbeat(heartbeat);

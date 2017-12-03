@@ -264,7 +264,14 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
         free(reply_data);
 
     } else if (msg_type == PING) {
+        int message_content_size = (int) (size - sizeof(MessageHdr));
         int row_size = sizeof(Address) + sizeof(long);
+        vector<MemberListEntry> rec_membership_list = DeserializeData(data, message_content_size/row_size);
+
+        for (vector<MemberListEntry>::iterator it = rec_membership_list.begin();
+                it != rec_membership_list.end(); it++) {
+            UpdateMembershipList(it->id, it->port, it->heartbeat, it->timestamp);
+        }
 
     }
 
@@ -307,8 +314,8 @@ Address MP1Node::GetNodeAddressFromIdAndPort(int id, short port) {
     return node_address;
 }
 
-vector<MemberListEntry> DeserializeData(char* table, int rows) {
-    vector<MemberListEntry> memberList;
+vector<MemberListEntry> MP1Node::DeserializeData(char* table, int rows) {
+    vector<MemberListEntry> member_list;
     int entry_size = sizeof(Address) + sizeof(long);
     MemberListEntry temp_entry;
 
@@ -327,8 +334,11 @@ vector<MemberListEntry> DeserializeData(char* table, int rows) {
         temp_entry.setheartbeat(heartbeat);
         temp_entry.settimestamp(par->getcurrtime());
 
-
+        MemberListEntry entry = MemberListEntry(temp_entry);
+        member_list.push_back(MemberListEntry(temp_entry));
     }
+
+    return member_list;
 }
 
 

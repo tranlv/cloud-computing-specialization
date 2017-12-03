@@ -86,6 +86,7 @@ public:
 	void PingOthers();
 
 	char * SerializeData(char * buffer);
+	vector<MemberListEntry> DeserializeData(char* table, int rows);
 	void CheckFailure();
 };
 

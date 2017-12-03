@@ -228,7 +228,6 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
     MsgTypes msg_type = msg->msgType;
 
     char * msg_content = data + sizeof(MessageHdr);
-    int msg_content_size = (int)(size - sizeof(MessageHdr));
 
     if (msg_type == JOINREP) {
         Address* source = (Address*) msg_content;
@@ -317,10 +316,75 @@ Address MP1Node::GetNodeAddressFromIdAndPort(int id, short port) {
  */
 void MP1Node::nodeLoopOps() {
 
+    // check if it is time to ping tohers
+    if (memberNode->pingCounter == 0) { //time to ping toehrs
+        memberNode->heartbeat++;
+        memberNode->memberList[0].heartbeat++;
+        PingOthers();
 
-    return;
+        //reser ping coutter to 5
+        memberNode->pingCounter = TFAIL;
+    } else {
+        memberNode->pingCounter--;
+    }
+
+    //check if any node has failed
+    CheckFailure();
+
 }
 
+void MP1Node::CheckFailure() {
+    Address peer;
+    for (vector<MemberListEntry>::iterator iter = memberNode->memberList.begin() + 1;
+        iter != memberNode->memberList.end(); iter++) {
+
+        
+    }
+}
+
+void MP1Node::PingOthers() {
+    size_t ping_size = sizeof(MessageHdr) + ((sizeof(Address) + sizeof(long))*memberNode->memberList.size());
+
+    MessageHdr * ping_data = (MessageHdr*)malloc(ping_size);
+
+    ping_data->msgType = PING;
+
+    char* data = SerializeData((char*) (ping_data + 1));
+
+    Address peer;
+
+    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin() + 1;
+         it != memberNode->memberList.end(); it++) {
+
+        peer = GetNodeAddressFromIdAndPort(it->id, it->port);
+        //send o other peer
+        emulNet->ENsend(&memberNode->addr, &peer, data, ping_size);
+    }
+
+    free(ping_data);
+
+}
+
+char* MP1Node::SerializeData(char *buffer) {
+    int index = 0;
+    int entry_size = sizeof(Address) + sizeof(long);
+    char *entry = (char*)malloc(entry_size);
+
+    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
+         it != memberNode->memberList.end(); it++, index += entry_size) {
+
+        Address addr = GetNodeAddressFromIdAndPort(it->id, it->port);
+        long heartbeat = it->getheartbeat();
+
+        memcpy(entry, &addr, sizeof(Address));
+        memcpy(entry + sizeof(Address), &heartbeat, sizeof(long));
+
+        memcpy(buffer + index, entry, entry_size);
+    }
+
+    free(entry);
+    return buffer;
+}
 
 
 /**

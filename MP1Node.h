@@ -21,7 +21,6 @@
  */
 #define TREMOVE 20
 #define TFAIL 5
-
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
  */
@@ -32,7 +31,7 @@
 enum MsgTypes{
     JOINREQ,
     JOINREP,
-	HEARTBEAT,
+	PING,
     DUMMYLASTMSGTYPE
 };
 
@@ -82,8 +81,10 @@ public:
 
 	Address GetNodeAddressFromIdAndPort(int id, short port);
 	void UpdateMembershipList(int id, short port, long heartbeat, long timeStamp);
+	void PingOthers();
 
-
+	char * SerializeData(char * buffer);
+	void CheckFailure();
 };
 
 #endif /* _MP1NODE_H_ */

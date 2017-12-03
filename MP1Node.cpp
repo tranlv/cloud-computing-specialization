@@ -349,7 +349,6 @@ void MP1Node::PingOthers() {
     }
 
     free(ping_data);
-
 }
 
 
@@ -407,8 +406,8 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
 
     } else if (msg_type == PING) {
 
-        auto message_content_size = (int) (size - sizeof(MessageHdr));
-        auto row_size = (int)(sizeof(Address) + sizeof(long));
+        int message_content_size = (int) (size - sizeof(MessageHdr));
+        int row_size = sizeof(Address) + sizeof(long);
 
         vector<MemberListEntry> rec_membership_list = DeserializeData(msg_content, message_content_size/row_size);
 
@@ -446,7 +445,6 @@ void MP1Node::nodeLoopOps() {
 
     //check if any node has failed
     CheckFailure();
-
 }
 
 

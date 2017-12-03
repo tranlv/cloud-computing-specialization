@@ -406,9 +406,11 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
         free(reply_data);
 
     } else if (msg_type == PING) {
-        int message_content_size = (int) (size - sizeof(MessageHdr));
-        int row_size = sizeof(Address) + sizeof(long);
-        vector<MemberListEntry> rec_membership_list = DeserializeData(data, message_content_size/row_size);
+
+        auto message_content_size = (int) (size - sizeof(MessageHdr));
+        auto row_size = (int)(sizeof(Address) + sizeof(long));
+
+        vector<MemberListEntry> rec_membership_list = DeserializeData(msg_content, message_content_size/row_size);
 
         for (vector<MemberListEntry>::iterator it = rec_membership_list.begin();
                 it != rec_membership_list.end(); it++) {

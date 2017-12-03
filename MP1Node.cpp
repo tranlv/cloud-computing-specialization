@@ -273,51 +273,44 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
     return answer;
 }
 
-bool MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long timestamp) {
+void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long timestamp) {
 
     Address entry_address = GetNodeAddressFromIdAndPort(id, port);
-    bool already_in_list = false;
 
     for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin();
          it != memberNode->memberList.end(); it++) {
 
-        if(GetNodeAddressFromIdAndPort(it->id, it->port) == entry_address ) { //already exists
-            already_in_list = true;
+        if (GetNodeAddressFromIdAndPort(it->id, it->port) == entry_address ) { //already exists
 
             if (heartbeat == FAIL) {
                 it->setheartbeat(FAIL);
-                return true;
+                return;
             }
 
             if (it->getheartbeat() == FAIL){ // ignore this
-                return false;
+                return;
             }
 
 
             if (it->getheartbeat() < heartbeat) { //update
                 it->settimestamp(par->getcurrtime());
                 it->setheartbeat(heartbeat);
-                return true;
+                return;
             }
-
-            return false;
+            return;
         }
     }
 
     if (heartbeat == -1){ // I've already removed it from my table.
-        return false;
+        return;
     }
 
-    if (!already_in_list) {
-        MemberListEntry new_entry = MemberListEntry(id, port, heartbeat, timestamp);
-        memberNode->memberList.push_back(new_entry);
+    MemberListEntry new_entry = MemberListEntry(id, port, heartbeat, timestamp);
+    memberNode->memberList.push_back(new_entry);
 #ifdef DEBUGLOG
         //void logNodeAdd(Address *, Address *);
         log->logNodeAdd(& memberNode->addr, & entry_address);
 #endif
-    }
-
-    return true;
 }
 
 Address MP1Node::GetNodeAddressFromIdAndPort(int id, short port) {

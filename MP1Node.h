@@ -79,7 +79,7 @@ public:
 	void initMemberListTable(Member *memberNode, int id, short port);
 	void printAddress(Address *addr);
 	virtual ~MP1Node();
-	
+
 	void UpdateMembershipList(int id, short port, long heartbeat, long timestamp);
 	bool PingOthers();
 	void CheckFailure();

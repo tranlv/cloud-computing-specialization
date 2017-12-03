@@ -105,7 +105,7 @@ int MP1Node::initThisNode(Address *joinaddr) {
 	memberNode->heartbeat = 0;
 	memberNode->pingCounter = TFAIL;
 	memberNode->timeOutCounter = -1;
-    initMemberListTable(memberNode, id, (short)port);
+    initMemberListTable(memberNode, id, port);
 
     return 0;
 }
@@ -477,7 +477,7 @@ Address MP1Node::getJoinAddress() {
  *
  * DESCRIPTION: Initialize the membership add
  */
-void MP1Node::initMemberListTable(Member *memberNode, int id, short port) {
+void MP1Node::initMemberListTable(Member *memberNode, int id, int port) {
 	memberNode->memberList.clear();
     MemberListEntry me = MemberListEntry(id, port, memberNode->heartbeat, par->getcurrtime());
     memberNode->memberList.push_back(me);

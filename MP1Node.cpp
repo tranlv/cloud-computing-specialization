@@ -245,25 +245,25 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
     char * msg_content = data + sizeof(MessageHdr);
     int msg_content_size = (int)(size - sizeof(MessageHdr));
 
-    if (msg_type == JOINREQ) {
-        Address* requester = (Address*) msg_content;
+    if (msg_type == JOINREP) {
+        Address* source = (Address*) msg_content;
 
-        // requester->addr point den char[0]
-        // (int*) requester->addr convert to int memory
-        // *(int*)(requester->addr) convert to 32-bits int value
+        // source ->addr point den char[0]
+        // (int*) source ->addr convert to int memory
+        // *(int*)(source ->addr) convert to 32-bits int value
 
-        UpdateMembershipList(*(int*)(requester->addr),
-                             *(short*)(requester-> addr + 4),
+        UpdateMembershipList(*(int*)(source ->addr),
+                             *(short*)(source -> addr + 4),
                              *(long*)(msg_content + sizeof(Address) + 1),
                              par->getcurrtime());
 
 
-    } else if (msg_type == JOINREP) {
-        Address* source = (Address*) msg_content;
+    } else if (msg_type == JOINREQ) {
+        Address* requester = (Address*) msg_content;
         memberNode->inGroup = true;
 
-        UpdateMembershipList(*(int*)(source->addr),
-                             *(short*)(source-> addr + 4),
+        UpdateMembershipList(*(int*)(requester ->addr),
+                             *(short*)(requester -> addr + 4),
                              *(long*)(msg_content + sizeof(Address) + 1),
                              par->getcurrtime());
 
@@ -275,7 +275,8 @@ bool MP1Node::recvCallBack(void *env, char *data, int size) {
         memcpy((char*)(reply_data) + 1 + sizeof(Address) + 1,
                 &(memberNode->heartbeat), sizeof(long));
 
-        emulNet->ENsend()
+        //send reply to entry node
+        emulNet->ENsend(&memberNode->addr, requester, (char*) reply_data, reply_size);
         free(reply_data);
     }
 

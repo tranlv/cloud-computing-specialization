@@ -81,7 +81,7 @@ public:
 	virtual ~MP1Node();
 
 
-	void UpdateMembershipList(MemberListEntry entry);
+	void UpdateMembershipList(int id, short port, long heartbeat, long timestamp);
 	void PingOthers();
 	void CheckFailure();
 	Address GetNodeAddressFromIdAndPort(int id, short port);

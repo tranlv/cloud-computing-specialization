@@ -21,8 +21,6 @@
  */
 #define TREMOVE 20
 #define TFAIL 5
-#define TPING 2
-#define FAIL -1
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
  */
@@ -83,10 +81,13 @@ public:
 
 	Address GetNodeAddressFromIdAndPort(int id, short port);
 	void UpdateMembershipList(int id, short port, long heartbeat, long timeStamp);
+
 	void PingOthers();
+	void CheckFailure();
+
 	char * SerializeData(char * buffer);
 	vector<MemberListEntry> DeserializeData(char* table, int rows);
-	void CheckFailure();
+
 };
 
 #endif /* _MP1NODE_H_ */

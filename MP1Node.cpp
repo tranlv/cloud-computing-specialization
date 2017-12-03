@@ -7,6 +7,8 @@
 
 #include "MP1Node.h"
 
+#include <sstream>
+
 /*
  * Note: You can change/add any functions in MP1Node.{h,cpp}
  */
@@ -103,8 +105,7 @@ int MP1Node::initThisNode(Address *joinaddr) {
     // node is up!
 	memberNode->nnb = 0;
 	memberNode->heartbeat = 0;
-	//memberNode->pingCounter = TFAIL;
-    memberNode->pingCounter = TPING;
+	memberNode->pingCounter = TFAIL;
 	memberNode->timeOutCounter = -1;
     initMemberListTable(memberNode, id, port);
 
@@ -284,12 +285,12 @@ void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long time
 
         if (GetNodeAddressFromIdAndPort(it->id, it->port) == entry_address ) { //already exists
 
-            if (heartbeat == FAIL) {
-                it->setheartbeat(FAIL);
+            if (heartbeat == -1) {
+                it->setheartbeat(-1);
                 return;
             }
 
-            if (it->getheartbeat() == FAIL){ // ignore this
+            if (it->getheartbeat() == -1){ // ignore this
                 return;
             }
 
@@ -303,7 +304,7 @@ void MP1Node::UpdateMembershipList(int id, short port, long heartbeat, long time
         }
     }
 
-    if (heartbeat == FAIL){ // I've already removed it from my table.
+    if (heartbeat == -1){ // I've already removed it from my table.
         return;
     }
 
@@ -367,7 +368,7 @@ void MP1Node::nodeLoopOps() {
         PingOthers();
 
         //reser ping coutter to 5
-        memberNode->pingCounter = TPING;
+        memberNode->pingCounter = TFAIL;
     } else {
         memberNode->pingCounter--;
     }
@@ -395,7 +396,7 @@ void MP1Node::CheckFailure() {
 
         // suspect the peer has failed
         if(par->getcurrtime() - it->gettimestamp() > TFAIL) {
-            it->setheartbeat(FAIL);
+            it->setheartbeat(-1);
         }
     }
 }

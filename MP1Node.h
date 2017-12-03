@@ -79,7 +79,6 @@ public:
 	virtual ~MP1Node();
 
 
-	Address GetNodeAddressFromIdAndPort(int id, short port);
 	void UpdateMembershipList(MemberListEntry entry);
 
 	void PingOthers();

@@ -3,7 +3,7 @@
 ---
 Overview
 ---
-The repo contains implementation of Distributed sytem's gossip-style membership protocol.
+The repo contains implementation of Distributed Sytem's Gossip-Style Membership Protocol for failure detection.
 
 The project is the first project of University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing).
 

@@ -1,11 +1,13 @@
 # **Gossip-Style Membership Protocol Implementation**
 
+---
 Overview
 ---
 The repo contains implementation of Distributed sytem's gossip-style membership protocol.
 
 The project is the first project of University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing).
 
+---
 Project Specification
 ---
 
@@ -15,6 +17,7 @@ The protocol must satisfy: i) Completeness all the time: every non-faulty proces
 
 There are few implementation options for membership protocols: all-to-all heartbeating, gossip-style heartbeating, or SWIM-style membership. This repo contains gossip-style hearbeating implementation.
 
+---
 Project Architecture
 ---
 
@@ -59,6 +62,7 @@ There are two reasons. Firstly, think about the issues involved in converting th
 
 Secondly, this structure allows us to debug (and even measure the performance through traces) the membership protocol easily and on a single host machine. Compare this with the debugging challenge for several hundred processes running on a real network. Once the simulation engine works, we can convert the implementation easily into one for a real network, and it will work.
 
+---
 Testing
 ---
 
@@ -89,18 +93,23 @@ iii) whether the correct failed node was detected (accuracy).
 ```
 Each of these is represented as configuration files inside the testcases folder.
 
-
+---
 Contribution
 ---
-Contributions are welcome! For bug reports or requests please submit an [issue](https://github.com/tranlyvu/membership-protocol/issues).
 
+Contributions are welcome! For bug reports or requests please submit an [issue](https://github.com/tranlyvu/gossip-style-membership-protocol/issues).
+
+---
 Contact-info
 ---
+
 Feel free to contact me to discuss any issues, questions, or comments.
 *  Email: vutransingapore@gmail.com
 *  Twitter: [@vutransingapore](https://twitter.com/vutransingapore)
 *  GitHub: [Tran Ly Vu](https://github.com/tranlyvu)
 
+---
 License
 ---
-See the [LICENSE](https://github.com/tranlyvu/membership-protocol/blob/master/LICENSE) file for license rights and limitations (Apache License 2.0).
+
+See the [LICENSE](https://github.com/tranlyvu/gossip-style-membership-protocol/blob/master/LICENSE) file for license rights and limitations (Apache License 2.0).

@@ -86,7 +86,6 @@ public:
 	Address GetNodeAddressFromIdAndPort(int id, short port);
 	char* SerializeData(char* buffer);
 	vector<MemberListEntry> DeserializeData(char* table, int rows);
-
 };
 
 #endif /* _MP1NODE_H_ */

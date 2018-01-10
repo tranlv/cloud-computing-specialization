@@ -21,7 +21,7 @@ There are few implementation options for membership protocols: all-to-all heartb
 Project Architecture
 ---
 
-### The three layers
+### The Three Layers
 
 The three-layer implementation framework allows users to run multiple copies of peers within one process running a single-threaded simulation engine. Here is how the three layers work.
 

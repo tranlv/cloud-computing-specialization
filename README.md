@@ -1,10 +1,10 @@
-# **Membership Protocol**
+# **Gossip-Style Membership Protocol Implementation**
 
 Overview
 ---
 The repo contains implementation of Distributed sytem's gossip-style membership protocol.
 
-The project is the first project of University of Illinois at Urbana-Champaign' [cloud computing specialization](https://www.coursera.org/specializations/cloud-computing).
+The project is the first project of University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing).
 
 Project Specification
 ---

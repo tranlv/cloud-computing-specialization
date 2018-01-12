@@ -105,7 +105,7 @@ Release History
 ---
 
 * 1.0.0
-    * The first proper release
+    * The first official release
 
 ---
 Contribution

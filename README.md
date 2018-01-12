@@ -121,6 +121,7 @@ For new features contribution, please follow the following instruction:
 3. Commit your changes (`git commit -am 'Add some new feature'`)
 4. Push to the branch (`git push origin feature/new`)
 5. Create a new Pull Request
+```
 
 ---
 Contact

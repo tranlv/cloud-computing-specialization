@@ -113,7 +113,7 @@ Contribution
 
 Contributions are welcome! For bug reports or requests please submit an [issue](https://github.com/tranlyvu/gossip-style-membership-protocol/issues).
 
-For new features contribution, please follow the following instruction:
+For new feature contribution, please follow the following instruction:
 
 ```
 1. Fork it (https://github.com/tranlyvu/wiki-link.git)

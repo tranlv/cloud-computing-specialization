@@ -1,11 +1,10 @@
 # **Gossip-Style Membership Protocol Implementation**
 
----
-Overview
----
-The repo contains implementation of Distributed Sytem's Gossip-Style Membership Protocol for failure detection.
+Implementation of Distributed Sytem's Gossip-Style Membership Protocol for failure detection.
 
 The project is the first project of University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing).
+
+<img src="img/image.png" width="480" alt="Combined Image" />
 
 ---
 Project Specification
@@ -69,8 +68,10 @@ There are two reasons. Firstly, think about the issues involved in converting th
 Secondly, this structure allows us to debug (and even measure the performance through traces) the membership protocol easily and on a single host machine. Compare this with the debugging challenge for several hundred processes running on a real network. Once the simulation engine works, we can convert the implementation easily into one for a real network, and it will work.
 
 ---
-Testing
+Usage
 ---
+
+Downloading a [release](https://github.com/tranlyvu/gossip-style-membership-protocol/releases)
 
 To compile the code, run make.
 
@@ -100,13 +101,29 @@ iii) whether the correct failed node was detected (accuracy).
 Each of these is represented as configuration files inside the testcases folder.
 
 ---
+Release History
+---
+
+* 1.0.0
+    * The first proper release
+
+---
 Contribution
 ---
 
 Contributions are welcome! For bug reports or requests please submit an [issue](https://github.com/tranlyvu/gossip-style-membership-protocol/issues).
 
+For new features contribution, please follow the following instruction:
+
+```
+1. Fork it (https://github.com/tranlyvu/wiki-link.git)
+2. Create your feature branch (`git checkout -b feature/new`)
+3. Commit your changes (`git commit -am 'Add some new feature'`)
+4. Push to the branch (`git push origin feature/new`)
+5. Create a new Pull Request
+
 ---
-Contact-info
+Contact
 ---
 
 Feel free to contact me to discuss any issues, questions, or comments.

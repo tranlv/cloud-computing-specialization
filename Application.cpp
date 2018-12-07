@@ -159,6 +159,7 @@ void Application::mp1Run() {
 			}
 			#endif
 		}
+		//cout<<"end of loop "<<i<<endl;
 
 	}
 }

@@ -98,11 +98,10 @@ There is a grader script Grader.sh that execute all configurations in testcases 
 3. Single node failure under a lossy network.
 
 The grader tests the following things:
-```
-i) whether all nodes joined the peer group correctly,
-ii) whether all nodes detected the failed node (completeness) and
-iii) whether the correct failed node was detected (accuracy).
-```
+
+1. whether all nodes joined the peer group correctly,
+2. whether all nodes detected the failed node (completeness) and
+3. whether the correct failed node was detected (accuracy).
 
 ---
 Conversion to real application

@@ -104,7 +104,7 @@ The grader tests the following things:
 3. whether the correct failed node was detected (accuracy).
 
 ---
-WARNING
+Real-world application
 ---
 
 This is an experimental protocol implementation project and still under heavy development. I do not yet recommend using in production environments.

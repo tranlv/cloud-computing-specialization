@@ -1,8 +1,8 @@
 # **Gossip-Style Membership Protocol Implementation**
 
-Implementation of Distributed Sytem's Gossip-Style Membership Protocol for failure detection.
+Implementation of Membership Protocol for failure detection in Distributed System.
 
-The project is the first project of University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing).
+The project was forked from University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing) programming assignment.
 
 <img src="img/image.png" width="480" alt="Combined Image" />
 
@@ -10,11 +10,17 @@ The project is the first project of University of Illinois at Urbana-Champaign' 
 Project Specification
 ---
 
-This project is about implementing a membership protocol. Since it is infeasible to run a thousand cluster nodes (peers) over a real network, The project implemented an emulated network layer (EmulNet). The membership protocol implementation will sit above EmulNet in a peer-to-peer (P2P) layer, but below an App layer. Think of this like a three-layer protocol stack with Application, P2P, and EmulNet as the three layers (from top to bottom). 
+Since it is infeasible to run a thousand cluster nodes (peers) over a real network, The project implemented an emulated network layer (EmulNet). The membership protocol implementation will sit above EmulNet in a peer-to-peer (P2P) layer, but below an App layer. Think of this like a three-layer protocol stack with Application, P2P, and EmulNet as the three layers (from top to bottom). 
 
-The protocol will satisfy: i) Completeness all the time: every non-faulty process must detect every node join, failure, and leave, and ii) Accuracy of failure detection when there are no message losses and message delays are small. When there are message losses, completeness must be satisfied and accuracy must be high. It must achieve all of these even under simultaneous multiple failures.
+The protocol will satisfy: 
+1. Completeness all the time: every non-faulty process must detect every node join, failure, and leave, and 
+2. Accuracy of failure detection when there are no message losses and message delays are small. When there are message losses, completeness must be satisfied and accuracy must be high. It must achieve all of these even under simultaneous multiple failures.
 
-There are few implementation options for membership protocols: all-to-all heartbeating, gossip-style heartbeating, or SWIM-style membership. This repo contains gossip-style hearbeating implementation.
+There are 3 implementation for for membership protocols: 
+
+1. [All-to-all heartbeating](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.147.1818&rep=rep1&type=pdf) (dafault): Each process pi sends out heartbeat to all the other processes in the system.
+2. [Gossip-style heartbeating](https://www.cs.cornell.edu/home/rvr/papers/GossipFD.pdf):  nodes periodically increments its own heartbeat counter and gossip their membership list to a random member at each time T(gossip)
+3. [SWIM-style membership](http://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf): a process pi randomly sends ping to pj and subsequently indirectly probes pj by randomly selecting k targets and uses them to send a ping to pj if pi does not receive ACK from pj within the pre-specified timeout. 
 
 ---
 Project Architecture
@@ -50,22 +56,12 @@ int ENcleanup();
 ENinit is called once by each node (peer) to initialize its own address (myaddr). ENsend and ENrecv are called by a peer respectively to send and receive waiting messages. ENrecv enqueues a received message using a function specified through a pointer enqueue(). The third and fourth parameters (t and times) are unused for now. You can assume that ENsend and ENrecv are reliable (when there are no message losses in the underlying network). ENcleanup is called at the end of the simulator run to clean up the EmulNet implementation. These functions are provided so that they can later be easily mapped onto implementations that use TCP sockets.
 
 ---
-### Logging
+### Other classes
 
 Log.{cpp,h} has a LOG() function that prints out node status into a file named dbg.log. Also it implements two functions logNodeAdd and logNodeRemove. Whenever a process adds or removes a member from its membership list, logNodeAdd and logNodeRemove will be used to log these respectively. 
 
----
-### Others
-
 Params.{cpp,h} contains the setparams() function that initializes several parameters at the simulator start, including the number of peers in the system(EN_GPSZ), and the global time variable globaltime, etc.
 The remaining files Member.cpp,h list some necessary definitions and declarations -- see descriptions in the files.
-
----
-### Why is the Code Structure So Involved? 
-
-There are two reasons. Firstly, think about the issues involved in converting this into a real application. All EN*() functions can be easily replaced with a different set that sends and receives messages through sockets. Then, once the periodic functionalities (e.g., nodeLoop()) are replaced with a thread that wakes up periodically, and appropriate conversions are made for calling the other functions nodeStart() and recvLoop(), the implementation can be made to run over a real network!
-
-Secondly, this structure allows us to debug (and even measure the performance through traces) the membership protocol easily and on a single host machine. Compare this with the debugging challenge for several hundred processes running on a real network. Once the simulation engine works, we can convert the implementation easily into one for a real network, and it will work.
 
 ---
 Usage
@@ -73,9 +69,7 @@ Usage
 
 Downloading a [release](https://github.com/tranlyvu/gossip-style-membership-protocol/releases)
 
-To compile the code, run make.
-
-To execute the program, from the program directory run: ./Application testcases/<test_name>.conf. The conf files contain information about the parameters used by your application:
+Test cases have are provided in testcases directory. The conf files contain information about the parameters used by your application:
 
 ```
 MAX_NNB: val
@@ -83,10 +77,21 @@ SINGLE_FAILURE: val
 DROP MSG: val
 MSG_DROP_PROB: val
 ```
-
 where MAX_NNB represents the max number of neighbors, SINGLE_FAILURE is a one bit 1/0 variable that sets single/multi failure scenarios, MSG_DROP_PROB represents the message drop probability (between 0 and 1) and MSG_DROP is a one bit 1/0 variable that decides if messages will be dropped or not.
 
-There is a grader script Grader.sh. It tests the implementation of membership protocol in 3 scenarios and grades each of them on 3 separate metrics. The scenarios are as follows:
+For example:
+
+```
+$ make clean
+$ make
+$ ./Application testcases/singlefailure.conf
+
+$ ./Application testcases/multifailure.conf
+
+$ ./Application testcases/msgdropsinglefailure.conf
+```
+
+There is a grader script Grader.sh that execute all configurations in testcases folder. It tests the implementation of membership protocol in 3 scenarios and grades each of them on 3 separate metrics. The scenarios are as follows:
 
 1. Single node failure
 2. Multiple node failure
@@ -98,7 +103,12 @@ i) whether all nodes joined the peer group correctly,
 ii) whether all nodes detected the failed node (completeness) and
 iii) whether the correct failed node was detected (accuracy).
 ```
-Each of these is represented as configuration files inside the testcases folder.
+
+---
+Conversion to real application
+---
+
+All EN*() functions can be easily replaced with a different set that sends and receives messages through sockets. Then, once the periodic functionalities (e.g., nodeLoop()) are replaced with a thread that wakes up periodically, and appropriate conversions are made for calling the other functions nodeStart() and recvLoop(), the implementation can be made to run over a real network!
 
 ---
 Release History
@@ -111,16 +121,16 @@ Release History
 Contribution
 ---
 
-Contributions are welcome! For bug reports or requests please submit an [issue](https://github.com/tranlyvu/gossip-style-membership-protocol/issues).
+Contributions are welcome! For bug reports or requests please submit an [issue](https://github.com/tranlyvu/membership-protocol/issues).
 
 For new feature contribution, please follow the following instruction:
 
 ```
-1. Fork the repo (https://github.com/tranlyvu/gossip-style-membership-protocol.git)
+1. Fork the repo (https://github.com/tranlyvu/membership-protocol.git)
 2. Create your feature branch (`git checkout -b new/your-feature`)
 3. Commit your changes (`git commit -am 'Add some new feature'`)
 4. Push to the branch (`git push origin new/your-feature`)
-5. Create a new Pull Request at https://github.com/tranlyvu/gossip-style-membership-protocol/pulls
+5. Create a new Pull Request at https://github.com/tranlyvu/membership-protocol/pulls
 ```
 
 ---
@@ -129,11 +139,10 @@ Contact
 
 Feel free to contact me to discuss any issues, questions, or comments.
 *  Email: vutransingapore@gmail.com
-*  Twitter: [@vutransingapore](https://twitter.com/vutransingapore)
 *  GitHub: [Tran Ly Vu](https://github.com/tranlyvu)
 
 ---
 License
 ---
 
-See the [LICENSE](https://github.com/tranlyvu/gossip-style-membership-protocol/blob/master/LICENSE) file for license rights and limitations (Apache License 2.0).
+See the [LICENSE](https://github.com/tranlyvu/membership-protocol/blob/master/LICENSE) file for license rights and limitations (Apache License 2.0).

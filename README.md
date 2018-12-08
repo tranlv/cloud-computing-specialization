@@ -1,4 +1,4 @@
-# **Gossip-Style Membership Protocol Implementation**
+# **Membership Protocol Implementation**
 
 Implementation of Membership Protocol for failure detection in Distributed System.
 
@@ -104,10 +104,12 @@ The grader tests the following things:
 3. whether the correct failed node was detected (accuracy).
 
 ---
-Conversion to real application
+WARNING
 ---
 
-All EN*() functions can be easily replaced with a different set that sends and receives messages through sockets. Then, once the periodic functionalities (e.g., nodeLoop()) are replaced with a thread that wakes up periodically, and appropriate conversions are made for calling the other functions nodeStart() and recvLoop(), the implementation can be made to run over a real network!
+This is an experimental protocol implementation project and work-in-progress repo under heavy development. I do not yet recommend using in production environments.
+
+However, here are some idea to integrate this into real-world application: All EN*() functions can be easily replaced with a different set that sends and receives messages through sockets. Then, once the periodic functionalities (e.g., nodeLoop()) are replaced with a thread that wakes up periodically, and appropriate conversions are made for calling the other functions nodeStart() and recvLoop(), the implementation can be made to run over a real network!
 
 ---
 Release History

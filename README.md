@@ -107,7 +107,7 @@ The grader tests the following things:
 WARNING
 ---
 
-This is an experimental protocol implementation project and work-in-progress repo under heavy development. I do not yet recommend using in production environments.
+This is an experimental protocol implementation project and still under heavy development. I do not yet recommend using in production environments.
 
 However, here are some idea to integrate this into real-world application: All EN*() functions can be easily replaced with a different set that sends and receives messages through sockets. Then, once the periodic functionalities (e.g., nodeLoop()) are replaced with a thread that wakes up periodically, and appropriate conversions are made for calling the other functions nodeStart() and recvLoop(), the implementation can be made to run over a real network!
 

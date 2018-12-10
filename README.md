@@ -16,10 +16,10 @@ The protocol will satisfy:
 1. Completeness all the time: every non-faulty process must detect every node join, failure, and leave, and 
 2. Accuracy of failure detection when there are no message losses and message delays are small. When there are message losses, completeness must be satisfied and accuracy must be high. It must achieve all of these even under simultaneous multiple failures.
 
-There are 3 implementation for for membership protocols: 
+There are 3 implementation for membership protocols: 
 
 1. [All-to-all heartbeating](http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.147.1818&rep=rep1&type=pdf) (dafault): Each process pi sends out heartbeat to all the other processes in the system.
-2. [Gossip-style heartbeating](https://www.cs.cornell.edu/home/rvr/papers/GossipFD.pdf):  nodes periodically increments its own heartbeat counter and gossip their membership list to a random member at each time T(gossip)
+2. [Gossip-style heartbeating](https://www.cs.cornell.edu/home/rvr/papers/GossipFD.pdf):  nodes periodically increments its own heartbeat counter and gossip their membership list to a random member at each time T(gossip).
 3. [SWIM-style membership](http://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf): a process pi randomly sends ping to pj and subsequently indirectly probes pj by randomly selecting k targets and uses them to send a ping to pj if pi does not receive ACK from pj within the pre-specified timeout. 
 
 ---

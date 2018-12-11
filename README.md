@@ -125,6 +125,14 @@ However, here are some idea to integrate this into real-world application: All E
 Release History
 ---
 
+* v1.0.1 (12 Dec 2018)
+    * Implement all-to-all heartbeat option with better comments
+    * Simplify header file MP1Node.h
+    * Add seperate test scripts
+    * Move submit scripts to new directory
+    * Add "Real-world application" section in Readme
+    * Modify "Usage" and "Project architecture" in Readme
+
 * v1.0.0
     * First official release
 

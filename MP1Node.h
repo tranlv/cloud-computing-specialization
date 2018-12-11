@@ -62,23 +62,23 @@ public:
 		return memberNode;
 	}
 	int recvLoop();
-	static int enqueueWrapper(void *, char *, int);
+	static int enqueueWrapper(void *env, char *buff, int size);
 	void nodeStart(char *, short);
-	int initThisNode(Address *);
-	int introduceSelfToGroup(Address *);
+	int initThisNode(Address *addr);
+	int introduceSelfToGroup(Address *addr);
 	int finishUpThisNode();
 	void nodeLoop();
 	void checkMessages();
-	bool recvCallBack(void *, char *, int);
+	bool recvCallBack(void *env, char *data, int size);
 	void nodeLoopOps();
-	int isNullAddress(Address *);
+	int isNullAddress(Address *addr);
 	Address getJoinAddress();
-	void initMemberListTable(Member *, int, int);
+	void initMemberListTable(Member *memberNode, int id, int port);
 	void printAddress(Address *addr);
 	virtual ~MP1Node();
 
-	void send_heartbeat(Address *, long);
-	void update_membership(Address*, long);
+	void send_heartbeat(Address * source_addr, long heartbeat);
+	void update_membership(Address* source_addr, long received_heartbeat);
 };
 
 #endif /* _MP1NODE_H_ */

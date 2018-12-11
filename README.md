@@ -91,6 +91,16 @@ $ ./Application testcases/multifailure.conf
 $ ./Application testcases/msgdropsinglefailure.conf
 ```
 
+or
+
+```
+$ ./single_failure.sh
+
+$ ./multi_failure.sh
+
+$ ./message_drop_single_failure.sh
+```
+
 There is a grader script Grader.sh that execute all configurations in testcases folder. It tests the implementation of membership protocol in 3 scenarios and grades each of them on 3 separate metrics. The scenarios are as follows:
 
 1. Single node failure

@@ -99,7 +99,7 @@ def submitSolution(email_address,password, submissions):
 ## This collects the source code (just for logging purposes) 
 def source(partIdx):
   # open the file, get all lines
-  f = open("dbg.%d.log" % partIdx)
+  f = open("../dbg.%d.log" % partIdx)
   src = f.read() 
   f.close()
   #print src

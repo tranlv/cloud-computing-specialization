@@ -7,6 +7,7 @@
 #* 
 #***********************
 #!/bin/sh
+cd ..
 rm -rf grade-dir # Make sure grade-dir is clean before starting
 rm -f dbg.*.log
 

@@ -63,7 +63,7 @@ public:
 	}
 	int recvLoop();
 	static int enqueueWrapper(void *env, char *buff, int size);
-	void nodeStart(char *, short);
+	void nodeStart(char *servaddrstr, short serverport);
 	int initThisNode(Address *addr);
 	int introduceSelfToGroup(Address *addr);
 	int finishUpThisNode();

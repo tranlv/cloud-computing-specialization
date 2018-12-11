@@ -69,7 +69,7 @@ Usage
 
 Downloading a [release](https://github.com/tranlyvu/gossip-style-membership-protocol/releases)
 
-Test cases have are provided in testcases directory. The conf files contain information about the parameters used by your application:
+Test cases are provided in testcases directory. The conf files contain information about the parameters used by application:
 
 ```
 MAX_NNB: val
@@ -78,28 +78,6 @@ DROP MSG: val
 MSG_DROP_PROB: val
 ```
 where MAX_NNB represents the max number of neighbors, SINGLE_FAILURE is a one bit 1/0 variable that sets single/multi failure scenarios, MSG_DROP_PROB represents the message drop probability (between 0 and 1) and MSG_DROP is a one bit 1/0 variable that decides if messages will be dropped or not.
-
-For example:
-
-```
-$ make clean
-$ make
-$ ./Application testcases/singlefailure.conf
-
-$ ./Application testcases/multifailure.conf
-
-$ ./Application testcases/msgdropsinglefailure.conf
-```
-
-or
-
-```
-$ ./single_failure.sh
-
-$ ./multi_failure.sh
-
-$ ./message_drop_single_failure.sh
-```
 
 There is a grader script Grader.sh that execute all configurations in testcases folder. It tests the implementation of membership protocol in 3 scenarios and grades each of them on 3 separate metrics. The scenarios are as follows:
 
@@ -112,6 +90,28 @@ The grader tests the following things:
 1. whether all nodes joined the peer group correctly,
 2. whether all nodes detected the failed node (completeness) and
 3. whether the correct failed node was detected (accuracy).
+
+In order to compile and execure 3 scenarios seperately:
+
+```
+$ make clean
+$ make
+$ ./Application testcases/singlefailure.conf
+
+$ ./Application testcases/multifailure.conf
+
+$ ./Application testcases/msgdropsinglefailure.conf
+```
+
+Or simply run 3 seperate scripts:
+
+```
+$ ./single_failure.sh
+
+$ ./multi_failure.sh
+
+$ ./message_drop_single_failure.sh
+```
 
 ---
 Real-world application

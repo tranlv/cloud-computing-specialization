@@ -62,18 +62,18 @@ public:
 		return memberNode;
 	}
 	int recvLoop();
-	static int enqueueWrapper(void *env, char *buff, int size);
-	void nodeStart(char *servaddrstr, short serverport);
-	int initThisNode(Address *joinaddr);
-	int introduceSelfToGroup(Address *joinAddress);
+	static int enqueueWrapper(void *, char *, int);
+	void nodeStart(char *, short);
+	int initThisNode(Address *);
+	int introduceSelfToGroup(Address *);
 	int finishUpThisNode();
 	void nodeLoop();
 	void checkMessages();
-	bool recvCallBack(void *env, char *data, int size);
+	bool recvCallBack(void *, char *, int);
 	void nodeLoopOps();
-	int isNullAddress(Address *addr);
+	int isNullAddress(Address *);
 	Address getJoinAddress();
-	void initMemberListTable(Member *memberNode, int, int);
+	void initMemberListTable(Member *, int, int);
 	void printAddress(Address *addr);
 	virtual ~MP1Node();
 

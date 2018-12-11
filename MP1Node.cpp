@@ -231,7 +231,7 @@ void MP1Node::checkMessages() {
  *
  * DESCRIPTION: Message handler for different message types
  */
-bool MP1Node::recvCallBack(void *env, char *data, int size ) {
+bool MP1Node::recvCallBack(void *env, char *data, int size) {
 	/*
 	 * Your code goes here
 	 */
@@ -281,34 +281,6 @@ bool MP1Node::recvCallBack(void *env, char *data, int size ) {
 
 }
 
-void MP1Node::update_membership(Address* source_addr, long received_heartbeat) {
-
-    // update every member of list including myself
-    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin(); it != memberNode->memberList.end(); it++) {
-        Address a;
-        memcpy(a.addr, &(it->id), sizeof(int));
-        memcpy(&a.addr[4], &(it->port), sizeof(short));
-
-        //compare content
-        if (a == *source_addr) {
-            if (received_heartbeat > it->getheartbeat()) {
-                it->setheartbeat(received_heartbeat);
-                it->settimestamp(par->getcurrtime());
-
-                // IMPORTANT: send heartbeat to other member if we receive a higher heartbeat of a current member
-                send_heartbeat(source_addr, received_heartbeat);  
-            }
-           return;
-        }
-    }
-
-    // add new member if it is not in the list yet
-    MemberListEntry new_entry = MemberListEntry(*((int*)source_addr->addr),
-                                 *((short*)&(source_addr->addr[4])), received_heartbeat, par->getcurrtime());
-    memberNode->memberList.push_back(new_entry);  
-    log->logNodeAdd(&memberNode->addr, source_addr);  
-}
-
 
 /**
  * FUNCTION NAME: nodeLoopOps
@@ -346,7 +318,7 @@ void MP1Node::nodeLoopOps() {
         }
     }
 
-    //UpdateMemberList(&memberNode->addr, memberNode->heartbeat);
+    return;
 
 }
 
@@ -399,6 +371,44 @@ void MP1Node::printAddress(Address *addr)
 }
 
 
+/**
+ * FUNCTION NAME: update_membership
+ *
+ * DESCRIPTION: update heartbeat received from an adress and sent out to other member if this heartbeat is higher than original value
+ */
+void MP1Node::update_membership(Address* source_addr, long received_heartbeat) {
+
+    // update every member of list including myself
+    for (vector<MemberListEntry>::iterator it = memberNode->memberList.begin(); it != memberNode->memberList.end(); it++) {
+        Address a;
+        memcpy(a.addr, &(it->id), sizeof(int));
+        memcpy(&a.addr[4], &(it->port), sizeof(short));
+
+        //compare content
+        if (a == *source_addr) {
+            if (received_heartbeat > it->getheartbeat()) {
+                it->setheartbeat(received_heartbeat);
+                it->settimestamp(par->getcurrtime());
+
+                // IMPORTANT: send heartbeat to other member if we receive a higher heartbeat of a current member
+                send_heartbeat(source_addr, received_heartbeat);  
+            }
+           return;
+        }
+    }
+
+    // add new member if it is not in the list yet
+    MemberListEntry new_entry = MemberListEntry(*((int*)source_addr->addr),
+                                 *((short*)&(source_addr->addr[4])), received_heartbeat, par->getcurrtime());
+    memberNode->memberList.push_back(new_entry);  
+    log->logNodeAdd(&memberNode->addr, source_addr);  
+}
+
+/**
+ * FUNCTION NAME: send_heartbeat
+ *
+ * DESCRIPTION: send heartbeat to every members of list including myself
+ */
 void MP1Node::send_heartbeat(Address * source_addr, long heartbeat) {
 
     MessageHdr* message;

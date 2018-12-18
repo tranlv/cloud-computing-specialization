@@ -167,6 +167,7 @@ For new feature contribution, please follow the following instruction:
 `$ git push origin new/your-feature`
 
 7. Go to your own repo and create a new Pull Request against 'dev' branch
+
 ---
 Contact
 ---

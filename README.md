@@ -7,6 +7,19 @@ The project was forked from University of Illinois at Urbana-Champaign' [Cloud C
 <img src="img/image.png" width="480" alt="Combined Image" />
 
 ---
+Table of contents
+---
+
+1. [Project Specification](#Project-Specification)
+2. [Project Architecture](#Project-Architecture)
+3. [Usage](#Usage)
+4. [Real-world application](#Real-world-application)
+5. [Release History](#Release-History)
+6. [Contribution](#Contribution)
+7. [Contact](#Contact)
+8. [License](#License)
+
+---
 Project Specification
 ---
 

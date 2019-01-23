@@ -1,4 +1,8 @@
-# **Membership Protocol Implementation**
+# **Membership Protocol Implementation** [![release][1]][2] [![HitCount][3]][4] 
+[1]: https://img.shields.io/github/release/tranlyvu/membership-protocol.svg
+[2]: https://github.com/tranlyvu/membership-protocol/releases
+[3]: http://hits.dwyl.io/tranlyvu/membership-protocol.svg
+[4]: http://hits.dwyl.io/tranlyvu/membership-protocol
 
 Implementation of Membership Protocol for failure detection in Distributed System.
 

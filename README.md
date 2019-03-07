@@ -186,6 +186,12 @@ For new feature contribution, please follow the following instruction:
 7. Go to your own repo and create a new Pull Request against 'dev' branch
 
 ---
+Hall of Fame
+---
+
+[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/0)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/0)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/1)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/1)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/2)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/2)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/3)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/3)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/4)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/4)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/5)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/5)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/6)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/6)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/7)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/7)
+
+---
 Contact
 ---
 
@@ -193,6 +199,7 @@ Feel free to contact me to discuss any issues, questions, or comments.
 *  Email: vutransingapore@gmail.com
 *  Linkedln: [@vutransingapore](https://www.linkedin.com/in/tranlyvu/)
 *  GitHub: [Tran Ly Vu](https://github.com/tranlyvu)
+*  Blog: [tranlyvu.github.io](https://tranlyvu.github.io/)
 
 ---
 License

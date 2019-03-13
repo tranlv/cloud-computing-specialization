@@ -1,8 +1,12 @@
-# **Membership Protocol Implementation** [![release][1]][2] [![HitCount][3]][4] 
+# **Membership Protocol Implementation** [![release][1]][2] [![HitCount][3]][4] [![HitCount][9]][10]  [![HitCount][11]][12] 
 [1]: https://img.shields.io/github/release/tranlyvu/membership-protocol.svg
 [2]: https://github.com/tranlyvu/membership-protocol/releases
 [3]: http://hits.dwyl.io/tranlyvu/membership-protocol.svg
 [4]: http://hits.dwyl.io/tranlyvu/membership-protocol
+[9]: http://githubbadges.com/star.svg?user=tranlyvu&repo=membership-protocol&style=default
+[10]: https://github.com/tranlyvu/membership-protocol
+[11]: http://githubbadges.com/fork.svg?user=tranlyvu&repo=membership-protocol&style=default
+[12]: https://github.com/tranlyvu/membership-protocol/fork
 
 Implementation of Membership Protocol for failure detection in Distributed System.
 
@@ -18,8 +22,8 @@ Table of contents
 2. [Project Architecture](#Project-Architecture)
 3. [Usage](#Usage)
 4. [Real-world application](#Real-world-application)
-5. [Release History](#Release-History)
-6. [Contribution](#Contribution)
+5. [Contribution](#Contribution)
+6. [Release History](#Release-History)
 7. [Contact](#Contact)
 8. [License](#License)
 
@@ -138,6 +142,22 @@ This is an experimental protocol implementation project and still under heavy de
 
 However, here are some idea to integrate this into real-world application: All EN*() functions can be easily replaced with a different set that sends and receives messages through sockets. Then, once the periodic functionalities (e.g., nodeLoop()) are replaced with a thread that wakes up periodically, and appropriate conversions are made for calling the other functions nodeStart() and recvLoop(), the implementation can be made to run over a real network!
 
+
+---
+Contribution
+---
+
+Please follow [contribution instruction](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTING.md) and [code of conduct](https://github.com/tranlyvu/membership-protocol/blob/dev/CODE-OF-CONDUCT.md)
+
+### [List of contributors](https://github.com/tranlyvu/wiki-link/blob/dev/CONTRIBUTORS.md) [![Open Source Helpers][5]][6]
+
+[5]: https://www.codetriage.com/tranlyvu/membership-protocol/badges/users.svg
+[6]: https://www.codetriage.com/tranlyvu/membership-protocol
+
+### Hall of Fame
+
+[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/0)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/0)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/1)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/1)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/2)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/2)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/3)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/3)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/4)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/4)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/5)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/5)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/6)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/6)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/7)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/7)
+
 ---
 Release History
 ---
@@ -154,48 +174,13 @@ Release History
     * First official release
 
 ---
-Contribution
+Contact [![Say Thank][7]][8]
 ---
-
-Contributions are welcome! For bug reports or requests please submit an [issue](https://github.com/tranlyvu/membership-protocol/issues).
-
-For new feature contribution, please follow the following instruction:
-
-1. Fork the repo https://github.com/tranlyvu/membership-protocol.git to your own github
-
-2. Clone from your own repo
-
-`$ git clone https://github.com/<your name>/membership-protocol.git`
-
-3. Make sure you are at dev branch 
-
-`$ git checkout dev && git pull`
-
-4. Create your feature/bug-fix branch
-
-`$ git checkout -b <feature/bug>/<branch-name>`
-
-5. Commit your changes 
-
-`$ git commit -am 'Add some new feature'`
-
-6. Push to the branch 
-
-`$ git push`
-
-7. Go to your own repo and create a new Pull Request against 'dev' branch
-
----
-Hall of Fame
----
-
-[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/0)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/0)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/1)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/1)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/2)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/2)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/3)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/3)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/4)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/4)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/5)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/5)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/6)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/6)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/7)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/7)
-
----
-Contact
----
+[7]: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
+[8]: https://saythanks.io/to/tranlyvu
 
 Feel free to contact me to discuss any issues, questions, or comments.
+
 *  Email: vutransingapore@gmail.com
 *  Linkedln: [@vutransingapore](https://www.linkedin.com/in/tranlyvu/)
 *  GitHub: [Tran Ly Vu](https://github.com/tranlyvu)

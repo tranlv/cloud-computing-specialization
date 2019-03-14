@@ -149,7 +149,7 @@ Contribution
 
 Please follow [contribution instruction](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTING.md) and [code of conduct](https://github.com/tranlyvu/membership-protocol/blob/dev/CODE-OF-CONDUCT.md)
 
-### [List of contributors](https://github.com/tranlyvu/wiki-link/blob/dev/CONTRIBUTORS.md) [![Open Source Helpers][5]][6]
+### [List of contributors](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTORS.md) [![Open Source Helpers][5]][6]
 
 [5]: https://www.codetriage.com/tranlyvu/membership-protocol/badges/users.svg
 [6]: https://www.codetriage.com/tranlyvu/membership-protocol

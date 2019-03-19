@@ -1,5 +1,5 @@
 <p align="center">
-	<strong><font size="5" face="arial" color="red"">Membership Protocol Implementation</font></strong>
+	<strong><font size="10" face="arial" color="red"">Membership Protocol Implementation</font></strong>
 </p>
 
 <p align="center">

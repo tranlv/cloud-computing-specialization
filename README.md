@@ -1,18 +1,18 @@
-# **Membership Protocol Implementation** [![release][1]][2] [![HitCount][3]][4] [![HitCount][9]][10]  [![HitCount][11]][12] 
-[1]: https://img.shields.io/github/release/tranlyvu/membership-protocol.svg
-[2]: https://github.com/tranlyvu/membership-protocol/releases
-[3]: http://hits.dwyl.io/tranlyvu/membership-protocol.svg
-[4]: http://hits.dwyl.io/tranlyvu/membership-protocol
-[9]: http://githubbadges.com/star.svg?user=tranlyvu&repo=membership-protocol&style=default
-[10]: https://github.com/tranlyvu/membership-protocol
-[11]: http://githubbadges.com/fork.svg?user=tranlyvu&repo=membership-protocol&style=default
-[12]: https://github.com/tranlyvu/membership-protocol/fork
+<p align="center">
+	<b>Membership Protocol Implementation</b>	
+</p>
 
+<p align="center">
+	<a href="https://github.com/tranlyvu/membership-protocol/releases"><img src="https://img.shields.io/github/release/tranlyvu/membership-protocol.svg"></a>
+	<a href="https://github.com/tranlyvu/membership-protocol"><img src="http://hits.dwyl.io/tranlyvu/membership-protocol.svg"></a>
+    <a href="https://github.com/tranlyvu/membership-protocol"><img src="http://githubbadges.com/star.svg?user=tranlyvu&repo=membership-protocol&style=default"></a>
+    <a href="https://github.com/tranlyvu/membership-protocol/fork"><img src="http://githubbadges.com/fork.svg?user=tranlyvu&repo=membership-protocol&style=default"></a>
+</p>
+
+---
 Implementation of Membership Protocol for failure detection in Distributed System.
 
 The project was forked from University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing) programming assignment.
-
-<img src="img/image.png" width="480" alt="Combined Image" />
 
 ---
 Table of contents
@@ -144,15 +144,16 @@ However, here are some idea to integrate this into real-world application: All E
 
 
 ---
-Contribution
+Contribution [![Open Source Helpers][5]][6]
 ---
+[5]: https://www.codetriage.com/tranlyvu/membership-protocol/badges/users.svg
+[6]: https://www.codetriage.com/tranlyvu/membership-protocol
 
 Please follow [contribution instruction](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTING.md) and [code of conduct](https://github.com/tranlyvu/membership-protocol/blob/dev/CODE-OF-CONDUCT.md)
 
-### [List of contributors](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTORS.md) [![Open Source Helpers][5]][6]
+### Appreciation
 
-[5]: https://www.codetriage.com/tranlyvu/membership-protocol/badges/users.svg
-[6]: https://www.codetriage.com/tranlyvu/membership-protocol
+Feel free to add your name into the [list of contributors](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTORS.md). You will automatically be inducted into Hall of Fame as a way to show my appreciation for your contributions.
 
 ### Hall of Fame
 
@@ -174,10 +175,8 @@ Release History
     * First official release
 
 ---
-Contact [![Say Thank][7]][8]
+Contact
 ---
-[7]: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
-[8]: https://saythanks.io/to/tranlyvu
 
 Feel free to contact me to discuss any issues, questions, or comments.
 
@@ -185,6 +184,8 @@ Feel free to contact me to discuss any issues, questions, or comments.
 *  Linkedln: [@vutransingapore](https://www.linkedin.com/in/tranlyvu/)
 *  GitHub: [Tran Ly Vu](https://github.com/tranlyvu)
 *  Blog: [tranlyvu.github.io](https://tranlyvu.github.io/)
+
+If you like my project, feel fee to leave a few words of appreciation here [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/tranlyvu)
 
 ---
 License

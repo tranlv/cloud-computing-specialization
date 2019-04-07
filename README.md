@@ -1,7 +1,7 @@
 # **Membership Protocol Implementation**
 
 <p align="center">
-	<a href="https://github.com/tranlyvu/membership-protocol/releases"><img src="https://img.shields.io/github/release/tranlyvu/membership-protocol.svg"></a>
+	  <a href="https://github.com/tranlyvu/membership-protocol/releases"><img src="https://img.shields.io/github/release/tranlyvu/membership-protocol.svg"></a>
     <a href="https://github.com/tranlyvu/membership-protocol"><img src="http://githubbadges.com/star.svg?user=tranlyvu&repo=membership-protocol&style=default"></a>
     <a href="https://github.com/tranlyvu/membership-protocol/fork"><img src="http://githubbadges.com/fork.svg?user=tranlyvu&repo=membership-protocol&style=default"></a>
 </p>
@@ -12,7 +12,7 @@ Implementation of Membership Protocol for failure detection in Distributed Syste
 
 The project was forked from University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing) programming assignment.
 
-<img src="img/image.png" width="480" alt="Combined Image" />
+If you like this project, feel fee to leave a few words of appreciation here [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/tranlyvu)
 
 ---
 Table of contents
@@ -138,7 +138,6 @@ Real-world application
 This is an experimental protocol implementation project and still under heavy development. I do not yet recommend using in production environments.
 
 However, here are some idea to integrate this into real-world application: All EN*() functions can be easily replaced with a different set that sends and receives messages through sockets. Then, once the periodic functionalities (e.g., nodeLoop()) are replaced with a thread that wakes up periodically, and appropriate conversions are made for calling the other functions nodeStart() and recvLoop(), the implementation can be made to run over a real network!
-
 
 ---
 Contribution [![Open Source Helpers](https://www.codetriage.com/tranlyvu/membership-protocol/badges/users.svg)](https://www.codetriage.com/tranlyvu/membership-protocol)

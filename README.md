@@ -1,10 +1,28 @@
 # **Membership Protocol Implementation**
 
+<p align="center">
+	<a href="https://github.com/tranlyvu/membership-protocol/releases"><img src="https://img.shields.io/github/release/tranlyvu/membership-protocol.svg"></a>
+    <a href="https://github.com/tranlyvu/membership-protocol"><img src="http://githubbadges.com/star.svg?user=tranlyvu&repo=membership-protocol&style=default"></a>
+    <a href="https://github.com/tranlyvu/membership-protocol/fork"><img src="http://githubbadges.com/fork.svg?user=tranlyvu&repo=membership-protocol&style=default"></a>
+</p>
+
+---
+
 Implementation of Membership Protocol for failure detection in Distributed System.
 
 The project was forked from University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing) programming assignment.
 
 <img src="img/image.png" width="480" alt="Combined Image" />
+
+---
+Table of contents
+---
+
+1. [Project Specification](#Project-Specification)
+2. [Project Architecture](#Project-Architecture) 
+3. [Usage](#Usage)
+4. [Contribution](#Contribution)
+5. [License](#License)
 
 ---
 Project Specification
@@ -121,61 +139,24 @@ This is an experimental protocol implementation project and still under heavy de
 
 However, here are some idea to integrate this into real-world application: All EN*() functions can be easily replaced with a different set that sends and receives messages through sockets. Then, once the periodic functionalities (e.g., nodeLoop()) are replaced with a thread that wakes up periodically, and appropriate conversions are made for calling the other functions nodeStart() and recvLoop(), the implementation can be made to run over a real network!
 
----
-Release History
----
-
-* v1.1.0 (12 Dec 2018)
-    * Implemented all-to-all heartbeat option
-    * Simplified header file MP1Node.h
-    * Added seperate test scripts
-    * Moved submit scripts to new directory
-    * Added "Real-world application" section in Readme
-    * Modified "Usage" and "Project architecture" in Readme
-
-* v1.0.0
-    * First official release
 
 ---
-Contribution
+Contribution [![Open Source Helpers](https://www.codetriage.com/tranlyvu/membership-protocol/badges/users.svg)](https://www.codetriage.com/tranlyvu/membership-protocol)
 ---
 
-Contributions are welcome! For bug reports or requests please submit an [issue](https://github.com/tranlyvu/membership-protocol/issues).
+### How to contribute
 
-For new feature contribution, please follow the following instruction:
+Please follow our contribution convention at [contribution instructions](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTING.md) and [code of conduct](https://github.com/tranlyvu/membership-protocol/blob/dev/CODE-OF-CONDUCT.md).
 
-1. Fork the repo https://github.com/tranlyvu/membership-protocol.git to your own github
+Please check out the [list of issues](https://github.com/tranlyvu/membership-protocol/issues) that required helps.
 
-2. Clone from your own repo
+### Appreciation
 
-`$ git clone https://github.com/<your name>/membership-protocol.git`
+Feel free to add your name into the [list of contributors](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTORS.md). You will automatically be inducted into Hall of Fame as a way to show my appreciation for your contributions.
 
-3. Make sure you are at dev branch 
+#### Hall of Fame
 
-`$ git checkout dev && git pull`
-
-4. Create your feature/bug-fix branch
-
-`$ git checkout -b <feature/bug>/<branch-name>`
-
-5. Commit your changes 
-
-`$ git commit -am 'Add some new feature'`
-
-6. Push to the branch 
-
-`$ git push origin new/your-feature`
-
-7. Go to your own repo and create a new Pull Request against 'dev' branch
-
----
-Contact
----
-
-Feel free to contact me to discuss any issues, questions, or comments.
-*  Email: vutransingapore@gmail.com
-*  Linkedln: [@vutransingapore](https://www.linkedin.com/in/tranlyvu/)
-*  GitHub: [Tran Ly Vu](https://github.com/tranlyvu)
+[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/0)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/0)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/1)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/1)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/2)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/2)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/3)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/3)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/4)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/4)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/5)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/5)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/6)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/6)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/7)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/7)
 
 ---
 License

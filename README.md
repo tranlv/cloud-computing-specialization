@@ -1,31 +1,28 @@
-<p align="center">
-	<strong><font size="10" face="arial" color="red">Membership Protocol Implementation</font></strong>
-</p>
+# **Membership Protocol Implementation**
 
 <p align="center">
-	<a href="https://github.com/tranlyvu/membership-protocol/releases"><img src="https://img.shields.io/github/release/tranlyvu/membership-protocol.svg"></a>
-	<a href="https://github.com/tranlyvu/membership-protocol"><img src="http://hits.dwyl.io/tranlyvu/membership-protocol.svg"></a>
+	  <a href="https://github.com/tranlyvu/membership-protocol/releases"><img src="https://img.shields.io/github/release/tranlyvu/membership-protocol.svg"></a>
     <a href="https://github.com/tranlyvu/membership-protocol"><img src="http://githubbadges.com/star.svg?user=tranlyvu&repo=membership-protocol&style=default"></a>
     <a href="https://github.com/tranlyvu/membership-protocol/fork"><img src="http://githubbadges.com/fork.svg?user=tranlyvu&repo=membership-protocol&style=default"></a>
 </p>
 
 ---
+
 Implementation of Membership Protocol for failure detection in Distributed System.
 
 The project was forked from University of Illinois at Urbana-Champaign' [Cloud Computing Specialization](https://www.coursera.org/specializations/cloud-computing) programming assignment.
+
+If you like this project, feel fee to leave a few words of appreciation here [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/tranlyvu)
 
 ---
 Table of contents
 ---
 
 1. [Project Specification](#Project-Specification)
-2. [Project Architecture](#Project-Architecture)
+2. [Project Architecture](#Project-Architecture) 
 3. [Usage](#Usage)
-4. [Real-world application](#Real-world-application)
-5. [Contribution](#Contribution)
-6. [Release History](#Release-History)
-7. [Contact](#Contact)
-8. [License](#License)
+4. [Contribution](#Contribution)
+5. [License](#License)
 
 ---
 Project Specification
@@ -142,50 +139,23 @@ This is an experimental protocol implementation project and still under heavy de
 
 However, here are some idea to integrate this into real-world application: All EN*() functions can be easily replaced with a different set that sends and receives messages through sockets. Then, once the periodic functionalities (e.g., nodeLoop()) are replaced with a thread that wakes up periodically, and appropriate conversions are made for calling the other functions nodeStart() and recvLoop(), the implementation can be made to run over a real network!
 
-
 ---
-Contribution [![Open Source Helpers][5]][6]
+Contribution [![Open Source Helpers](https://www.codetriage.com/tranlyvu/membership-protocol/badges/users.svg)](https://www.codetriage.com/tranlyvu/membership-protocol)
 ---
-[5]: https://www.codetriage.com/tranlyvu/membership-protocol/badges/users.svg
-[6]: https://www.codetriage.com/tranlyvu/membership-protocol
 
-Please follow [contribution instruction](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTING.md) and [code of conduct](https://github.com/tranlyvu/membership-protocol/blob/dev/CODE-OF-CONDUCT.md)
+### How to contribute
+
+Please follow our contribution convention at [contribution instructions](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTING.md) and [code of conduct](https://github.com/tranlyvu/membership-protocol/blob/dev/CODE-OF-CONDUCT.md).
+
+Please check out the [list of issues](https://github.com/tranlyvu/membership-protocol/issues) that required helps.
 
 ### Appreciation
 
 Feel free to add your name into the [list of contributors](https://github.com/tranlyvu/membership-protocol/blob/dev/CONTRIBUTORS.md). You will automatically be inducted into Hall of Fame as a way to show my appreciation for your contributions.
 
-### Hall of Fame
+#### Hall of Fame
 
 [![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/0)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/0)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/1)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/1)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/2)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/2)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/3)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/3)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/4)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/4)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/5)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/5)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/6)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/6)[![](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/images/7)](https://sourcerer.io/fame/tranlyvu/tranlyvu/membership-protocol/links/7)
-
----
-Release History
----
-
-* v1.1.0 (12 Dec 2018)
-    * Implemented all-to-all heartbeat option
-    * Simplified header file MP1Node.h
-    * Added seperate test scripts
-    * Moved submit scripts to new directory
-    * Added "Real-world application" section in Readme
-    * Modified "Usage" and "Project architecture" in Readme
-
-* v1.0.0
-    * First official release
-
----
-Contact
----
-
-Feel free to contact me to discuss any issues, questions, or comments.
-
-*  Email: vutransingapore@gmail.com
-*  Linkedln: [@vutransingapore](https://www.linkedin.com/in/tranlyvu/)
-*  GitHub: [Tran Ly Vu](https://github.com/tranlyvu)
-*  Blog: [tranlyvu.github.io](https://tranlyvu.github.io/)
-
-If you like my project, feel fee to leave a few words of appreciation here [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/tranlyvu)
 
 ---
 License

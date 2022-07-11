@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- MPD file Generated with GPAC version 0.5.1-DEV-rev5379  on 2014-09-10T13:23:18Z-->
+<MPD xmlns="urn:mpeg:dash:schema:mpd:2011" minBufferTime="PT1.500000S" type="static" mediaPresentationDuration="PT0H9M45.46S" profiles="urn:mpeg:dash:profile:isoff-live:2011">
+  <ProgramInformation moreInformationURL="http://gpac.sourceforge.net">
+    <Title>BigBuckBunny</Title>
+  </ProgramInformation>
+
+<!--  2 sec version -->
+  <Period duration="PT0H9M45.46S">
+    <AdaptationSet segmentAlignment="true" group="1" maxWidth="480" maxHeight="360" maxFrameRate="24" par="4:3">
+      <SegmentTemplate timescale="96" media="bunny_$Bandwidth$bps/BigBuckBunny_2s$Number$.m4s" startNumber="1" duration="192" initialization="bunny_$Bandwidth$bps/BigBuckBunny_2s_init.mp4" />
+      <Representation id="320x240 46.0kbps" mimeType="video/mp4" codecs="avc1.42c00d" width="320" height="240" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="45652" />
+      <Representation id="1920x1080 4.2Mbps" mimeType="video/mp4" codecs="avc1.42c032" width="1920" height="1080" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="4219897" />
+<!--      <Representation id="1920x1080 2.5Mbps" mimeType="video/mp4" codecs="avc1.42c032" width="1920" height="1080" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="2484135" />
+-->
+
+<!--  1 sec version -->
+<!--
+  <Period duration="PT0H9M55.46S">
+    <AdaptationSet segmentAlignment="true" group="1" maxWidth="480" maxHeight="360" maxFrameRate="24" par="4:3">
+      <SegmentTemplate timescale="96" media="bunny_$Bandwidth$bps/BigBuckBunny_1s$Number$.m4s" startNumber="1" duration="96" initialization="bunny_$Bandwidth$bps/BigBuckBunny_1s_init.mp4" />
+      <Representation id="320x240 47.0kbps" mimeType="video/mp4" codecs="avc1.42c00d" width="320" height="240" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="46980" />
+      <Representation id="1920x1080 2.2Mbps" mimeType="video/mp4" codecs="avc1.42c032" width="1920" height="1080" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="2234145" />
+      <Representation id="1920x1080 4.7Mbps" mimeType="video/mp4" codecs="avc1.42c032" width="1920" height="1080" frameRate="24" sar="1:1" startWithSAP="1" bandwidth="4726737" />
+-->
+    </AdaptationSet>
+  </Period>
+</MPD>

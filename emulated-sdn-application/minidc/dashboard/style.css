@@ -1,0 +1,28 @@
+body {
+  font: 12px sans-serif;
+}
+
+table { 
+  text-align: center;
+  border-collapse: collapse;
+  font-size: 16px;
+  margin: 45px;
+ }
+
+table th { 
+  font-size: 18px;
+  font-weight: bold;
+  padding: 8px;
+  background: #b9c9fe;
+  border-top: 2px solid #aabcfe;
+  border-bottom: 1px solid #fff;
+  color: #039;
+ }
+
+table td { 
+  padding: 8x;
+  background: #e8edff;
+  border-bottom: 1px solid #fff;
+  color: #669;
+  border-top: 1px solid transparent;
+ }

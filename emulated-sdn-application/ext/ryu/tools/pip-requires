@@ -1,0 +1,9 @@
+eventlet
+lxml
+msgpack-python>=0.3.0
+netaddr
+oslo.config>=1.2.0
+paramiko
+routes
+six>=1.4.0
+webob>=1.2

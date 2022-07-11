@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>IlliniFlix</title>
+
+    <script src="dist/dash.debug.js"></script>
+    <!--<script src="../../dist/dash.all.js"></script>-->
+
+    <script>
+        var player;
+
+        function init()
+        {
+            player = Dash.create(document.querySelector(".dashjs-player"));
+	    player.setBufferMax("infinity")
+            setInterval(updateStats,500)
+        }
+
+        function updateStats()
+        {
+            var     metrics = player.getMetricsFor('video'),
+                    metricsExt = player.getMetricsExt();
+
+	    if (metrics && metricsExt) {
+                bufferLevel = metricsExt.getCurrentBufferLevel(metrics);
+	        repSwitch = metricsExt.getCurrentRepresentationSwitch(metrics);
+	        httpRequest = metricsExt.getCurrentHttpRequest(metrics);
+	        droppedFramesMetrics = metricsExt.getCurrentDroppedFrames(metrics);
+		
+                if (repSwitch !== null) {
+		    bitrateIndexValue = metricsExt.getIndexForRepresentation(repSwitch.to);
+		    bandwidthValue = metricsExt.getBandwidthForRepresentation(repSwitch.to);
+		    bandwidthValue = bandwidthValue / 1000;
+		    bandwidthValue = Math.round(bandwidthValue);
+                }
+
+		if (httpRequest !== null) {
+		    lastFragmentDuration = httpRequest.mediaduration;
+		    lastFragmentDownloadTime = httpRequest.tresponse.getTime() - httpRequest.trequest.getTime();
+
+		    lastFragmentDownloadTime = lastFragmentDownloadTime;
+		    lastFragmentDuration = lastFragmentDuration.toPrecision(4);
+		}
+
+		if (droppedFramesMetrics !== null) {
+		    droppedFrames = droppedFramesMetrics.droppedFrames;
+		}
+		
+		document.querySelector("#stats").innerHTML = 
+	           "<table style=\"width:40%\">"
+	            + "<tr><td>Buffer level:</td><td>" + bufferLevel.level.toPrecision(3) + "s</td></tr>" 
+		    + "<tr><td>Bandwidth:</td><td>" + bandwidthValue + "kbps</td></tr>"
+		    + "<tr><td>Last Fragment Download Time:</td><td>" + lastFragmentDownloadTime + "ms</td></tr>"
+		    + "<tr><td>Dropped Frames:</td><td>" + droppedFrames + "</td></tr>"
+		    + "</table>";
+
+//	            + "<tr><td>Buffer length setting: " + player.getBufferMax() + "</td></tr>"
+//                  + "<br>Bitrate: " + metricsExt.getBandwidthForRepresentation(repSwitch.to)
+//		    + "<br>Last Frag Duration: " + lastFragmentDuration
+	    }
+        }
+    </script>
+    <style>
+        video {
+            width: 640px;
+            height: 360px;
+        }
+    </style>
+
+    <body onload="init()" style="background-color:black">
+
+        <div align="center">
+	  <img style="width:50%; max-height:40%; padding-bottom:10px" src="illiniflix-logo.png" />
+	</div>
+        <div align="center">
+            <video class="dashjs-player" autoplay controls>
+                <source src="bunny.mpd" type="application/dash+xml"/>
+            </video>
+        </div>
+        <div align="center" style="color:#00FF00; padding-top:10px">
+            <span id="stats"/>
+        </div>
+
+    </body>
+</html>

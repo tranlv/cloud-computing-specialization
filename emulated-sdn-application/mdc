@@ -1,0 +1,113 @@
+#!/usr/bin/env python
+
+from optparse import OptionParser
+
+import os
+import sys
+import subprocess
+import time
+
+from mininet.net import Mininet
+from mininet.link import TCLink
+from mininet.log import setLogLevel
+from mininet.cli import CLI
+from mininet.node import RemoteController
+from mininet.node import Host
+
+if 'PYTHONPATH' in os.environ:
+    sys.path = os.environ['PYTHONPATH'].split(':') + sys.path
+
+def inpath(substr):
+    for p in sys.path:
+        if substr in p:
+            return True
+    return False
+
+def addpath(name, loc):
+    if os.path.exists(loc):
+        sys.path.append(loc)
+    else:
+        print "**Warning**: expected {0} directory ({1}) could not be added to PYTHONPATH".format(name, loc)
+
+if __name__ == "__main__":
+    if len(sys.argv) != 2:
+        print "Usage: {0} [option]".format(sys.argv[0])
+        print "[Options]"
+        print "   --vid\tassignment 1-3 profile (video streaming)"
+        print "   --adp\tassignment 4 profile (load balancing)"
+        sys.exit(0)
+
+    mdcdir = os.path.dirname(os.path.abspath(__file__))
+
+    # add minidc if it's not already in pythonpath
+    if not inpath("minidc"):
+        addpath("minidc", mdcdir)
+
+    from minidc.dc import Datacenter, writeConfig
+    from minidc.placement import *
+    from minidc.profiles import *
+    from minidc.topo import FattreeTopology
+    import minidc.stats
+
+    tenants = []
+    numEdgeSwitches = 3
+    hostsPerEdge = 2
+    bw = 5
+
+    if sys.argv[1] == "--vid":
+        tenants.append(VidstreamProfile(numNodes=2))
+        tenants.append(IperfProfile(numNodes=4, bw=1.0))
+    elif sys.argv[1] == "--rep":
+        tenants.append(RepMemcacheProfile(numSrvs=3, numClients=1, trials=-1, activeReps=3))
+        tenants.append(IperfProfile(numNodes=4, bw=1.6))
+        numEdgeSwitches = 4
+        bw = 5
+    elif sys.argv[1] == "--adp":
+        tenants.append(RepMemcacheProfile(numSrvs=3, numClients=1, trials=-1, activeReps=3))
+        tenants.append(EmptyProfile(numNodes=2))
+        tenants.append(EmptyProfile(numNodes=2))
+        tenants.append(IperfProfile(numNodes=4, bw=0.8))
+        tenants.append(EmptyProfile(numNodes=2))
+        tenants.append(EmptyProfile(numNodes=2))
+        tenants.append(IperfProfile(numNodes=4, bw=0.8))
+        numEdgeSwitches = 4
+        hostsPerEdge = 5
+        bw = 5
+    else:
+        print "Unexpected parameter"
+        sys.exit(0)
+
+    # start dc
+    topo = FattreeTopology(numEdgeSwitches=numEdgeSwitches,
+                           bw=bw,
+                           hostsPerEdge=hostsPerEdge)
+    net = Mininet(topo=topo, link=TCLink, controller=None)
+
+    dc = Datacenter()
+    dc.setup(net.hosts, tenants)
+    writeConfig(net, topo, dc)
+
+    print "start ryu<ENTER>"
+    raw_input()
+
+    net.addController('rmController', controller=RemoteController,
+                      ip='127.0.0.1', port=6633)
+
+    # start php server for dashboard
+    dashdir = os.path.join(mdcdir, "minidc", "dashboard")
+    phpsrv = subprocess.Popen(["php", "-S", "127.0.0.1:80",
+                               "-t", dashdir],
+                              stdout=open("/tmp/Dashboard.log", "wb"),
+                              stderr=open("/tmp/Dashboard.err", "wb"))
+
+    net.start()
+    dc.start()
+    minidc.stats.mcStats.start()
+
+    CLI(net)
+
+    dc.stop()
+    minidc.stats.mcStats.stop()
+    net.stop()
+
+    phpsrv.kill()

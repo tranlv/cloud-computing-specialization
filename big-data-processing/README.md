@@ -1,6 +1,6 @@
 # **Big Data Processing**
 
-The prject aims to store and process large airline transportation dataset to answer different types of queries. we will process in batch processing modes (using Hadoop/Cassandra, and separately using Spark) and stream processing mode (using Storm).
+Store and process large airline transportation dataset to answer different types of queries. we will process in batch processing modes (using Hadoop/Cassandra, and separately using Spark) and stream processing mode (using Storm).
 
 
 ---

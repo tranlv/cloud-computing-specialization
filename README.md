@@ -13,10 +13,10 @@ The repo include solution for University of Illinois at Urbana-Champaign' [Cloud
 List of Projects
 ---
 
-* [Membership Protocol Implementation](): Implementation of Membership Protocol for failure detection in Distributed System.
-* [Fault-tolerant Key Value Store](): Building a distributed Fault-Tolerant Key-Value Store on nodes running membership protocol.
-* [Emulated SDN Application](): Monitored and improve routing policy on an emulated network and application using Software-Defined Network (SDN).
-* [Big Data Processing]
+* [Membership Protocol](https://github.com/tranlyvu/cloud-computing-specialization/tree/master/membership-protocol): Implementation of Membership Protocol for failure detection in Distributed System.
+* [Fault-tolerant Key Value Store](https://github.com/tranlyvu/cloud-computing-specialization/tree/master/key-value-store): Building a distributed Fault-Tolerant Key-Value Store on nodes running membership protocol.
+* [Emulated SDN Application](https://github.com/tranlyvu/cloud-computing-specialization/tree/master/emulated-sdn-application): Monitored and improve routing policy on an emulated network and application using Software-Defined Network (SDN).
+* [Big Data Processing](https://github.com/tranlyvu/cloud-computing-specialization/tree/master/big-data-processing): The prject aims to store and process large airline transportation dataset to answer different types of queries.
 
 ---
 Contribution
